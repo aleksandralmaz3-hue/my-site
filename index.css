@@ -1,0 +1,988 @@
+.filters {
+  /* у тебя уже есть display:grid и т.д. */
+  align-items: start; /* <-- это главное */
+}
+
+/* закрыто — панель исчезает полностью */
+.filters details.dd:not([open]) > .dd__panel {
+  display: none !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin-top: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+
+/* открыто — панель видна */
+.filters details.dd[open] > .dd__panel {
+  display: grid !important;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 8px;
+  border-top: 1px dashed #e5e7eb;
+  max-height: 260px;
+  overflow: auto;
+}
+
+/* Каждая выпадающая панель как отдельный блок */
+/* ===== Выпадающие фильтры (только в верхней панели) ===== */
+.filters .dd {
+  position: relative;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.filters .dd + .dd {
+  margin-top: 12px;
+}
+
+.filters .dd > summary {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.filters .dd > summary::after {
+  content: "▾";
+  font-size: 12px;
+  opacity: 0.7;
+}
+.filters .dd[open] > summary::after {
+  content: "▴";
+}
+
+.filters .dd__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  display: none;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12);
+  padding: 8px;
+  max-height: 260px;
+  overflow: auto;
+  z-index: 1000;
+}
+.filters .dd[open] .dd__panel {
+  display: grid;
+  gap: 6px;
+}
+
+/* выравнивание карточек-деталей по верхнему краю */
+.filters {
+  align-items: flex-start;
+}
+.filters > .dd {
+  align-self: flex-start;
+}
+
+/* чтобы карточки не тянулись по высоте самой высокой */
+.filters {
+  align-items: start;
+}
+
+.dd > summary {
+  min-height: 42px; /* фиксируем одинаковую высоту заголовка */
+  display: flex;
+  align-items: center;
+}
+
+/* выравниваем карточки по верхнему краю */
+.filters {
+  align-items: flex-start;
+}
+.filters > .dd {
+  align-self: flex-start;
+}
+
+/* опустить ТОЛЬКО первый блок */
+.filters > .dd:first-child {
+  margin-top: 12px; /* подбери 2–4px до идеального совпадения */
+  /* или, если нужно точнее:
+  transform: translateY(2px);
+  */
+}
+
+.layout {
+  display: flex;
+  gap: 20px;
+}
+#sidebar {
+  width: 200px;
+  background: #eee;
+  padding: 10px;
+}
+#center {
+  flex: 1;
+  background: #ddd;
+  padding: 10px;
+}
+
+.block {
+  margin-bottom: 12px;
+  padding: 6px;
+  background: #fff;
+}
+
+/* Боковая панель */
+.sidebar {
+  margin-top: 12px;
+  width: 280px;
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 16px;
+  padding: 16px;
+  display: block;
+}
+.side__section {
+  background: #d4d4d8;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.side__head {
+  display: inline-block;
+  font-weight: 700;
+  background: #eee;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 4px 10px;
+  margin-bottom: 8px;
+}
+.side__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+/* Прятать блок лаконично */
+[hidden] {
+  display: none !important;
+}
+
+/* Макет: левая + правая колонка */
+.main {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.main {
+  align-items: start; /* отключаем растягивание по высоте */
+}
+.sidebar {
+  align-self: start; /* левая колонка по высоте контента */
+}
+
+/* Правая часть (область ленты) */
+.main__right {
+  height: calc(100dvh - var(--bar-h) - 24px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* Сетка карточек и карточка объявления */
+.cards {
+  display: grid;
+  gap: 12px;
+}
+/* --- Компактная карточка объявления --- */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* растягиваем содержимое */
+  min-height: 120px; /* фиксируем минимальную высоту */
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Верхняя часть: заголовок + цена */
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+* Нижняя часть — описание + бейдж */ .card__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto; /* уводим вниз */
+}
+.card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.card__meta {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+/* текст внутри карточки */
+.card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Бейдж всегда справа внизу */
+.card__badge {
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.empty {
+  background: #eef2ff;
+  border: 1px dashed #9aa3b2;
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* ===== ШАПКА (общая для index.html и create.html) ===== */
+.bar {
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  margin: 16px auto;
+  max-width: 1100px;
+}
+.bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #111827;
+  text-decoration: none;
+}
+.brand__logo {
+  font-size: 20px;
+}
+.brand__name {
+  line-height: 1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* ← лёгкая тень */
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.chip:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* тень глубже при наведении */
+  transform: translateY(-2px); /* лёгкий подъём */
+}
+
+.btn-outline {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: #fff;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: #fff1f2;
+}
+
+/* общий контейнер как у шапки */
+.wrap {
+  max-width: 1100px;
+  margin: 16px auto;
+  padding: 0 16px;
+}
+
+/* плашка контента (такие же рамки/радиусы как у .bar) */
+.panel {
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 16px;
+}
+.panel h1 {
+  margin: 0 0 12px;
+}
+
+/* Серый цвет у плейсхолдера в select */
+.select-placeholder option[disabled][selected] {
+  color: #6b7280; /* светло-серый */
+}
+
+select:required:invalid {
+  color: #6b7280; /* светло-серый */
+}
+option[value=""] {
+  color: #6b7280;
+}
+
+/* Убираем стрелочки у input[type=number] */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* для Firefox */
+}
+
+select:required:invalid {
+  color: #6b7280; /* серый */
+}
+option[value=""] {
+  color: #6b7280;
+}
+
+/* Единый бокс-модуль для всех полей */
+input,
+select,
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+}
+
+/* Select: ровный правый край + своя стрелка */
+select {
+  display: block;
+  height: 40px;
+  font-size: 16px;
+  line-height: 1.4;
+  padding: 6px 34px 6px 10px; /* справа место под стрелку */
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background-color: #fff;
+
+  /* убираем нативную стрелку */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  /* своя стрелка (SVG), всегда ровно у правого края */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* отступ от правого края */
+}
+
+/* Для Firefox, если вдруг включит свою стрелку */
+select::-ms-expand {
+  display: none;
+}
+
+/* Выравнивание чекбоксов и текста */
+input[type="checkbox"] {
+  vertical-align: middle; /* ставим по центру строки */
+  margin-right: 6px; /* отступ справа от квадрата */
+}
+
+label {
+  display: flex;
+  align-items: center; /* выравнивание по центру */
+  gap: 6px; /* промежуток между квадратом и текстом */
+}
+
+/* === Исправление боковой панели категорий === */
+.sidebar label {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* расстояние между квадратом и текстом */
+  cursor: pointer;
+}
+
+.sidebar input[type="checkbox"] {
+  margin: 0; /* убираем лишние отступы */
+  flex-shrink: 0; /* фиксируем размер квадрата */
+}
+
+/* Ровные чекбоксы в сайдбаре: фиксированная колонка под квадрат */
+.sidebar .side__list label {
+  display: grid;
+  grid-template-columns: 16px 1fr; /* 16px для квадрата, остальное — текст */
+  align-items: center;
+  column-gap: 8px;
+}
+
+.sidebar .side__list input[type="checkbox"] {
+  margin: 0; /* без лишних отступов */
+  justify-self: start; /* квадрат прямо у левого края */
+}
+
+.sidebar .side__list li {
+  margin: 0;
+}
+
+/* Прокрутка для правой колонки с объявлениями */
+.main__right {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px); /* высота окна минус шапка и отступы */
+}
+
+#list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+  padding-bottom: 1000px; /* ← добавить */
+}
+
+/* Стилизация скроллбара */
+#list::-webkit-scrollbar {
+  width: 10px;
+}
+#list::-webkit-scrollbar-track {
+  background: #e3e4e8;
+  border-radius: 8px;
+}
+#list::-webkit-scrollbar-thumb {
+  background: #b9bbc3;
+  border-radius: 8px;
+}
+#list::-webkit-scrollbar-thumb:hover {
+  background: #9fa2aa;
+}
+
+/* ===== Запираем скролл окна и задаём высоты ===== */
+:root {
+  --bar-h: 56px;
+} /* если шапка выше — подправь число */
+
+html,
+body {
+  height: 100%;
+  overflow: hidden; /* общий скролл окна запрещаем */
+}
+
+/* Контейнеры ничего не обрезают */
+.wrap {
+  height: auto;
+  overflow: visible;
+}
+.main {
+  height: auto;
+  overflow: visible;
+}
+
+/* ЛЕВАЯ ПАНЕЛЬ: липнет под шапкой и сама скроллится */
+/* === LIFT SIDEBAR CONTENT (override) === */
+.sidebar {
+  top: var(--bar-h) !important;
+  margin-top: 0 !important;
+}
+
+/* Поднимаем контент внутри серого контейнера */
+#sidebar {
+  padding-top: 2px !important;
+} /* было 8–16px */
+#sidebar .side__section {
+  padding: 4px 10px 10px !important;
+} /* было 10–12px сверху */
+#sidebar .side__head {
+  margin: 0 0 6px !important;
+} /* убираем лишний зазор над заголовком */
+
+/* Для плотной сетки чекбоксов */
+#sidebar .side__list {
+  gap: 6px !important;
+}
+
+/* —— ПРАВАЯ КОЛОНКА: собственный скролл списка —— */
+.main__right {
+  height: calc(100vh - var(--bar-h) - 24px); /* такая же высота, как у левой */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* список объявлений — скролл тут */
+#list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #b9bbc3 #e3e4e8;
+  min-height: auto;
+}
+#list::-webkit-scrollbar {
+  width: 10px;
+}
+#list::-webkit-scrollbar-track {
+  background: #e3e4e8;
+  border-radius: 8px;
+}
+#list::-webkit-scrollbar-thumb {
+  background: #b9bbc3;
+  border-radius: 8px;
+}
+#list::-webkit-scrollbar-thumb:hover {
+  background: #9fa2aa;
+}
+
+/* лёгкое уплотнение, чтобы два блока влезали красиво */
+.side__section {
+  padding: 6px 10px 10px;
+  margin-bottom: 8px;
+}
+.side__head {
+  padding: 3px 8px;
+  margin-bottom: 8px;
+}
+.sidebar label {
+  font-size: 14px;
+  line-height: 1.2;
+}
+.side__list {
+  gap: 6px;
+}
+
+/* === Поиск по телефону (выпадающий) === */
+.phone-form {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.phone-form input {
+  flex: 1;
+  height: 36px;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+}
+.phone-form .chip {
+  height: 36px;
+}
+.muted {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* === Город: сетка кнопок в выпадающем меню === */
+.city-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.city-btn {
+  height: 36px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+.city-btn:hover {
+  background: #f3f4f6;
+}
+.city-btn.is-active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+.city-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* заблокированный (неактивный) фильтр */
+.filters details.dd.is-disabled {
+  pointer-events: none;
+  opacity: 0.55;
+  filter: grayscale(0.1);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.filters .dd__panel {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* === Выпадашка "Город" как "Все категории" === */
+#city-dd .dd__panel {
+  max-height: none !important; /* без обрезки */
+  overflow: visible !important; /* без скролла */
+  display: grid !important;
+  gap: 8px !important;
+  padding: 8px !important;
+}
+
+/* FIX: панель "Город" скрыта, когда details закрыт */
+#city-dd:not([open]) > .dd__panel {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* одна колонка вместо 2 */
+#city-dd .city-grid {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 8px !important;
+}
+
+/* кнопки как элементы списка категорий */
+#city-dd .city-btn {
+  display: block;
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  font: inherit;
+}
+#city-dd .city-btn:hover {
+  background: #f3f4f6;
+}
+#city-dd .city-btn.is-active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* нижняя панель действий (если есть) — без изменений */
+#city-dd .city-actions {
+  margin-top: 8px;
+}
+
+/* Город: кнопки с чёрной обводкой как в "Все категории" */
+#city-dd .dd__panel .city-grid .city-btn,
+#city-dd.dd .dd__panel .city-btn,
+#city-dd .city-btn {
+  border: 2px solid #111 !important;
+  border-radius: 10px !important;
+  background: #e8e9ed !important;
+  height: 40px;
+  width: 100%;
+  display: block;
+  padding: 8px 12px;
+  text-align: center;
+  font: inherit;
+  /* запасной способ, если где-то бордер давят — нарисуем «обводку» тенью */
+  box-shadow: inset 0 0 0 0 #111 !important;
+}
+
+#city-dd .city-btn:hover {
+  background: #f3f4f6 !important;
+}
+
+#city-dd .city-btn.is-active {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15) !important;
+}
+/* Скрыть кнопку "Все города" под выпадашкой города */
+#city-dd .city-actions {
+  display: none;
+}
+
+/* Заблокированная нижняя левая панель */
+.sidebar.is-locked {
+  pointer-events: none;
+  opacity: 0.55;
+  filter: grayscale(0.1);
+}
+
+/* --- Компактная карточка объявления (оверрайд) --- */
+.card {
+  padding: 8px 10px;
+}
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px; /* меньше воздуха сверху */
+}
+.card__meta {
+  margin: 2px 0 6px; /* ужимаем мета-строку */
+  font-size: 13px;
+}
+.card__desc {
+  margin: 0; /* убираем дефолтный отступ <p> */
+  line-height: 1.35;
+}
+/* --- FIX: сайдбар, у пунктов строго 2 колонки --- */
+#sidebar .side__list {
+  display: grid;
+  gap: 6px;
+}
+#sidebar .side__list li {
+  margin: 0;
+}
+
+#sidebar .side__list label {
+  display: grid !important;
+  grid-template-columns: 16px 1fr !important;
+  align-items: center !important;
+  column-gap: 8px !important;
+  row-gap: 0 !important;
+}
+
+/* чекбокс ровно в первую колонку, без внутренних отступов */
+#sidebar .side__list input[type="checkbox"] {
+  margin: 0 !important;
+  justify-self: start !important;
+  align-self: center !important;
+}
+
+/* на всякий случай выключим глобальный flex у label внутри сайдбара */
+#sidebar label {
+  gap: 0 !important;
+}
+
+/* === Унификация шрифтов в формах create.html === */
+label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  display: block;
+  margin-bottom: 4px;
+}
+
+input,
+select,
+textarea {
+  font-size: 14px;
+  font-family: inherit;
+  color: #111827;
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Центровка заголовка в create.html */
+.panel h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Заголовки блоков по центру */
+.side__head {
+  padding: 5px 8px;
+  margin-bottom: 8px;
+}
+
+/* Список чекбоксов по центру */
+.side__list {
+  gap: 6px;
+}
+/* Опускаем первые два блока в сайдбаре */
+#sidebar .side__section:first-of-type {
+  margin-top: 11px; /* регулируй значение, например 12–20px */
+}
+
+/* --- Ровные карточки объявлений --- */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+.card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.card__price {
+  white-space: nowrap;
+}
+.card__desc {
+  margin: 0;
+  line-height: 1.35;
+}
+.card__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: auto;
+}
+.card__meta {
+  color: #6b7280;
+  font-size: 13px;
+}
+.card__badge {
+  font-size: 11px; /* уменьшили шрифт */
+  padding: 2px 6px; /* сделали компактнее */
+  border: 1px solid #d1d5db;
+  border-radius: 6px; /* меньше скругление */
+  background: #f9fafb;
+  font-weight: 600;
+  white-space: nowrap;
+
+  margin-left: auto; /* уводим вправо */
+  align-self: flex-end; /* прижимаем вниз */
+}
+
+/* === Новости сайта === */
+.news {
+  margin-top: 24px;
+  padding: 16px;
+  background: #e5e7eb;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+}
+.news__title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #111827;
+}
+.news__body {
+  min-height: 80px; /* большой серый блок */
+  padding: 12px;
+  /*  background: #e5e7eb; */
+  /*  border: 1px dashed #9ca3af; */
+  /*  border-radius: 10px; */
+  /*   line-height: 1.45; */
+  /*   color: #111827; */
+  white-space: pre-wrap;
+}
+.news__item + .news__item {
+  margin-top: 10px;
+}
+.news__date {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+/* Языковая кнопка вправо в шапке */
+#langBtn {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+}
+
+.bar {
+  /* чтобы кнопка не налезала на контент */
+  padding-right: 56px; /* было 10-12px, увеличиваем справа */
+  position: sticky; /* уже есть, оставляем */
+}
+#langBtn {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* лёгкая тень */
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+#langBtn:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* глубже при наведении */
+  transform: translateY(-2px); /* лёгкий подъём */
+}
+/* Отступ между кнопками справа */
+.btn-right {
+  display: flex;
+}
+.btn-right > * + * {
+  margin-left: 10px !important;
+} /* гарантированный отступ */
+/* Делаем верхний блок такой же ширины, как и нижние */
+.bar {
+  max-width: 100% !important; /* убираем ограничение */
+  width: 100%;
+  border-radius: 10px; /* скругление оставляем */
+  margin: 16px auto; /* тот же отступ сверху/снизу */
+  padding-left: 16px; /* как у .wrap */
+  padding-right: 16px; /* как у .wrap */
+  box-sizing: border-box;
+}
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+#btnClear {
+  background: #e5e7eb;
+  border: 1px solid #9ca3af;
+  color: #111827;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#btnClear:hover {
+  background: #d1d5db;
+}
+.form button,
+#btnClear,
+.badge,
+.item__btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2); /* ← добавлена тень */
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.form button:hover,
+#btnClear:hover,
+.badge:hover,
+.item__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25); /* тень глубже при наведении */
+}
+#feedbackList {
+  display: none;
+}

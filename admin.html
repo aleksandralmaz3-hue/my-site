@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Админ-панель</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      /* фон и центрирование */
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        background: #c4c5c7;
+        padding-top: 5vh;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+      }
+      .admin {
+        width: 50%;
+        max-width: 860px;
+        background: #f9fafb;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 16px;
+        box-sizing: border-box;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+      }
+      .admin__top {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .badge {
+        background: #ef4444;
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-decoration: none;
+      }
+      h1 {
+        margin: 8px 0 16px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .form textarea {
+        width: 100%;
+        height: 110px;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        resize: vertical;
+        box-sizing: border-box;
+        background: #fff;
+      }
+      .form button {
+        margin-top: 10px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        border: 1px solid #2563eb;
+        background: #2563eb;
+        color: #fff;
+        cursor: pointer;
+      }
+      .list {
+        margin-top: 18px;
+      }
+      .item {
+        position: relative;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 90px 12px 12px;
+        margin-bottom: 10px;
+        word-wrap: break-word;
+      }
+      .item__btn {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        padding: 6px 10px;
+        border: 0;
+        border-radius: 6px;
+        background: #ef4444;
+        color: #fff;
+        cursor: pointer;
+      }
+      @media (max-width: 900px) {
+        .admin {
+          width: 90%;
+        }
+      }
+      h1 {
+        font-size: clamp(18px, 5vw, 28px); /* подгоняем размер */
+        max-width: 280px; /* ограничиваем ширину */
+        margin: 0 auto; /* центрируем */
+        text-align: center;
+        white-space: normal; /* перенос разрешён */
+        word-wrap: break-word; /* переносим длинные слова */
+        margin: 0 auto 20px auto; /* добавили 15px снизу */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin">
+      <div class="admin__top">
+        <a class="badge" href="index.html">Лента</a>
+      </div>
+
+      <h1>Администратор</h1>
+
+      <form id="feedbackForm" class="form" autocomplete="off">
+        <textarea
+          id="feedbackText"
+          placeholder="Напишите сообщение админу..."
+        ></textarea>
+        <div class="form-buttons">
+          <button type="submit">Отправить</button>
+          <button type="button" id="btnClear">Очистить</button>
+        </div>
+      </form>
+
+      <div id="feedbackList" class="list"></div>
+    </div>
+    <script>
+      // ===== Настройки API (тестовый json-server) =====
+      const API = "http://localhost:3000";
+
+      // ===== DOM =====
+      const form = document.getElementById("feedbackForm");
+      const textarea = document.getElementById("feedbackText");
+      const list = document.getElementById("feedbackList");
+      const btnClear = document.getElementById("btnClear"); // <-- ДОБАВЛЕНО
+
+      // Очистка поля
+      btnClear.addEventListener("click", () => {
+        textarea.value = "";
+        textarea.focus();
+      });
+
+      // ===== Утилиты =====
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c])
+        );
+
+      const readLocal = () => {
+        try {
+          const raw = JSON.parse(localStorage.getItem("feedback") || "[]");
+          return Array.isArray(raw) ? raw : [];
+        } catch {
+          return [];
+        }
+      };
+      const writeLocal = (arr) =>
+        localStorage.setItem("feedback", JSON.stringify(arr));
+
+      // ===== API (мягко, офлайн-устойчиво) =====
+      async function postFeedbackToAPI(msg) {
+        try {
+          const r = await fetch(API + "/feedback", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: msg.text }),
+          });
+          if (!r.ok) return null;
+          const data = await r.json();
+          return data?.id ?? null;
+        } catch {
+          return null;
+        }
+      }
+      async function deleteFeedbackFromAPI(apiId) {
+        try {
+          await fetch(API + "/feedback/" + apiId, { method: "DELETE" });
+        } catch {}
+      }
+
+      // ===== Рендер =====
+      function render() {
+        const items = readLocal();
+        list.innerHTML = items
+          .map(
+            (m) => `
+      <div class="item" data-id="${m.id}">
+        <div class="item__text">${esc(m.text)}</div>
+        <button class="item__btn" type="button" onclick="deleteForever(${
+          m.id
+        })">Удалить навсегда</button>
+      </div>
+    `
+          )
+          .join("");
+      }
+
+      // ===== Отправка =====
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const text = (textarea.value || "").trim();
+        if (!text) return;
+
+        const msg = { id: Date.now(), text };
+        const arr = readLocal();
+        arr.unshift(msg);
+        writeLocal(arr);
+        render(); // <-- ДОБАВЛЕНО
+        textarea.value = ""; // <-- ДОБАВЛЕНО
+        textarea.focus(); // <-- ДОБАВЛЕНО
+
+        const apiId = await postFeedbackToAPI(msg);
+        if (apiId) {
+          const current = readLocal();
+          if (current.length && current[0].id === msg.id) {
+            current[0].apiId = apiId;
+            writeLocal(current);
+          }
+        }
+      });
+
+      // ===== Удаление =====
+      async function deleteForever(id) {
+        const arr = readLocal();
+        const victim = arr.find((x) => x.id === id);
+        if (victim?.apiId) await deleteFeedbackFromAPI(victim.apiId);
+        writeLocal(arr.filter((x) => x.id !== id));
+        render();
+      }
+      window.deleteForever = deleteForever;
+
+      // стартовый рендер
+      render();
+    </script>
+
+    <script>
+      document.getElementById("sendBtn").addEventListener("click", async () => {
+        const message = document.getElementById("adminMessage").value.trim();
+
+        if (message) {
+          // формируем объект сообщения
+          const newMessage = {
+            id: Date.now(),
+            text: message,
+          };
+
+          // отправляем POST-запрос на сервер
+          await fetch("http://localhost:3000/feedback", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newMessage),
+          });
+
+          alert("Сообщение отправлено администратору.");
+          document.getElementById("adminMessage").value = "";
+        } else {
+          alert("Введите текст сообщения!");
+        }
+      });
+
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        document.getElementById("adminMessage").value = "";
+      });
+    </script>
+  </body>
+</html>
