@@ -1,38 +1,763 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8"> <!-- Кодировка (русский текст отображается корректно) -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Адаптив для телефона -->
-  <title>Мой первый сайт</title> <!-- Заголовок (показывается во вкладке браузера) -->
-  <style>
-    /* Стили (CSS), чтобы страница выглядела красиво */
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: #f0f0f0;
-      padding: 50px;
-    }
-    h1 {
-      color: #2c3e50;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      background: #3498db;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #2980b9;
-    }
-  </style>
-</head>
-<body>
-  <!-- Содержимое страницы -->
-  <h1>Привет, GitHub Pages!</h1>
-  <p>Это мой первый бесплатный сайт.</p>
-  <button onclick="alert('Кнопка работает!')">Нажми меня</button>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Продай-ка!</title>
+    <style>
+      /* ===== Сброс и база ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+          sans-serif;
+        color: #111827; /* текст */
+        background: #bababe; /* фон */
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      :focus-visible {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+
+      /* ===== Контейнер ===== */
+      .wrap {
+        max-width: 1100px;
+        margin: 8px auto;
+        padding: 0 16px;
+      }
+
+      /* ===== Шапка ===== */
+      .bar {
+        background: #e5e7eb;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 10px 12px;
+        position: sticky;
+        top: 8px;
+        z-index: 20;
+      }
+      .bar__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+      }
+      .brand__logo {
+        font-size: 20px;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .link {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+      }
+      .btn {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ef4444;
+        color: #ef4444;
+        background: #fff;
+      }
+      .btn:hover {
+        background: #fff1f2;
+      }
+      .link:hover {
+        background: #f9fafb;
+      }
+
+      /* ===== Блок фильтров ===== */
+      .filters {
+        margin-top: 4px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 640px) {
+        .filters {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 960px) {
+        .filters {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Выпадашка на <details> */
+      .dd {
+        border: 1px solid #d1d5db;
+        background: #fff;
+        border-radius: 10px;
+        padding: 6px;
+      }
+      .dd > summary {
+        list-style: none;
+        cursor: pointer;
+        user-select: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 44px; /* можно 40–44px, как тебе нравится */
+        line-height: 1; /* исключаем разницу из-за межстрочного */
+      }
+
+      .dd > summary::after {
+        content: "▾";
+        font-size: 12px;
+        opacity: 0.7;
+      }
+      .dd[open] > summary::after {
+        content: "▴";
+      }
+      .dd__panel {
+        display: none; /* было: display: grid; */
+        margin-top: 0; /* переносим отступ в состояние open */
+        padding: 0; /* переносим в состояние open */
+        border-top: 0; /* переносим в состояние open */
+        max-height: none; /* переносим в состояние open */
+        overflow: visible; /* переносим в состояние open */
+      }
+
+      /* Когда <details> открыт — показать панель и вернуть оформление */
+      .dd[open] .dd__panel {
+        display: grid;
+        gap: 6px;
+        margin-top: 8px;
+        padding: 8px;
+        border-top: 1px dashed #e5e7eb;
+        max-height: 260px;
+        overflow: auto;
+      }
+
+      /* Скрывать содержимое закрытых <details> */
+      .dd:not([open]) .dd__panel {
+        display: none !important;
+      }
+
+      .dd__item {
+        padding: 6px 8px;
+        border-radius: 6px;
+      }
+      .dd__item:hover {
+        background: #f3f4f6;
+      }
+
+      /* Поле ввода телефона */
+      .field {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 6px;
+      }
+      .input {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        padding: 6px;
+      }
+      .input:focus {
+        outline: none;
+      }
+      .mini {
+        padding: 6px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .filters {
+        align-items: flex-start;
+      }
+      /* ====== АДАПТИВ ДЛЯ ОСНОВЫ (ПК/ноут/планшет/телефон) ====== */
+
+      /* Бейзлайн (телефон, ≤480–640px) */
+      .main {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr; /* всё в одну колонку */
+        align-items: start;
+      }
+      .sidebar {
+        order: 2; /* фильтры под списком объявлений */
+      }
+      .main__right {
+        order: 1;
+      }
+
+      /* Утилиты/кнопки/мелочи (если не объявлены выше) */
+      .chip {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
+      }
+      .chip:active {
+        transform: translateY(1px);
+      }
+      .muted {
+        color: #6b7280;
+        font-size: 12px;
+      }
+      #phone-form {
+        display: flex;
+        gap: 8px;
+      }
+      #phone-form input#phone {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .city-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .city-grid .city-btn {
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fff;
+      }
+      .city-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 8px 8px;
+      }
+
+      /* Карточки объявлений — сетка и отступы */
+      .cards {
+        display: grid;
+        gap: 8px;
+      }
+      @media (min-width: 480px) {
+        .cards {
+          gap: 10px;
+        }
+      }
+
+      /* Планшет (≥640px) — две колонки: узкий сайдбар + контент */
+      @media (min-width: 640px) {
+        .main {
+          grid-template-columns: 220px 1fr;
+        }
+        .sidebar {
+          order: 1;
+          position: sticky;
+          top: 90px; /* держим боковуху под шапкой */
+          align-self: start;
+        }
+        .main__right {
+          order: 2;
+        }
+        .city-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      /* Ноутбук (≥960px) — шире сайдбар, дыхание у карточек */
+      @media (min-width: 960px) {
+        .wrap {
+          max-width: 1100px;
+        } /* уже есть, оставляем как есть */
+        .main {
+          grid-template-columns: 260px 1fr;
+          gap: 14px;
+        }
+        .cards {
+          gap: 12px;
+        }
+        .city-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+
+      /* ПК/широкие (≥1200px) — комфортные поля и сетка карточек плотнее */
+      @media (min-width: 1200px) {
+        .wrap {
+          max-width: 1240px;
+        }
+        .main {
+          grid-template-columns: 280px 1fr;
+        }
+        .cards {
+          gap: 14px;
+        }
+      }
+
+      /* Вид карточки (если список собирает script.js — задаём «пилюлю» как на макете) */
+      .cards > * {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+      }
+
+      /* Заголовки и списки в сайдбаре (визуал как на скрине) */
+      .side__section {
+        background: #e5e7eb;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .side__head {
+        margin: 0 0 8px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #374151;
+      }
+      .side__list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 6px;
+      }
+      .side__list label,
+      .side__list .chip {
+        font-size: 14px;
+      }
+      /* бейдж «Осталось 6 дн.» */
+      .ad-expire {
+        max-width: 92px; /* чтобы был предел ширины */
+        white-space: normal; /* разрешаем перенос строк */
+        overflow-wrap: anywhere; /* переносим при нехватке места */
+        word-break: normal; /* не ломаем слова лишнего */
+        hyphens: auto; /* ставим дефисы по словарю */
+        line-height: 1.2;
+        text-align: center;
+      }
+      /* Карточка: текст слева, бейдж справа */
+      .ad-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        justify-content: space-between;
+      }
+      .ad-text {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+      /* Пилюля дней */
+      .ad-expire {
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+        white-space: nowrap;
+        font-weight: 600;
+      }
+      @media (max-width: 340px) {
+        .ad-expire {
+          white-space: normal;
+          overflow-wrap: anywhere;
+          hyphens: auto;
+          text-align: center;
+        }
+      }
+
+      /* === ФИКС АДАПТИВА ХЕДЕРА (кнопка не вылазит) === */
+      @media (max-width: 420px) {
+        .wrap {
+          padding: 0 8px;
+        } /* чуть меньше поля контейнера */
+
+        .bar__row {
+          flex-wrap: wrap; /* разрешаем перенос на 2-ю строку */
+          gap: 8px;
+        }
+
+        .nav {
+          width: 100%;
+          display: flex;
+          gap: 8px;
+          justify-content: space-between;
+        }
+
+        .nav .chip,
+        .nav .btn {
+          flex: 1; /* кнопки тянутся равномерно */
+          min-width: 0;
+          max-width: 100%;
+          white-space: normal; /* разрешаем перенос текста */
+          overflow-wrap: anywhere;
+          line-height: 1.2;
+          text-align: center;
+          padding: 8px 10px; /* компактнее на телефоне */
+          font-size: 14px;
+        }
+      }
+
+      .ad-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .ad-text {
+        flex: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        hyphens: auto;
+      }
+      .ad-expire {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+      @media (max-width: 340px) {
+        .ad-expire {
+          white-space: normal;
+          overflow-wrap: anywhere;
+          hyphens: auto;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- ===== ШАПКА ===== -->
+      <header class="bar">
+        <div class="bar__row">
+          <a class="brand" href="#">
+            <span class="brand__logo">🏷️</span>
+            <span>Продай-ка!</span>
+          </a>
+          <nav class="nav">
+            <button type="button" id="feed-reset" class="chip">Лента</button>
+            <a class="btn" href="create.html">Подать объявление</a>
+          </nav>
+        </div>
+
+        <!-- ===== ФИЛЬТРЫ ===== -->
+        <div class="filters">
+          <!-- ПО НОМЕРУ ТЕЛЕФОНА -->
+          <details class="dd" id="phone-dd">
+            <summary class="chip">По номеру телефона</summary>
+            <div class="dd__panel">
+              <form id="phone-form" class="phone-form" onsubmit="return false;">
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="+38 (0__) ___-__-__"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                />
+
+                <button type="button" id="phone-search" class="chip">
+                  Найти
+                </button>
+                <button type="button" id="phone-clear" class="chip">
+                  Сброс
+                </button>
+              </form>
+              <small class="muted"
+                >Введи от 5 цифр (можно частично, без пробелов и скобок).</small
+              >
+            </div>
+          </details>
+
+          <!-- Город -->
+          <details class="dd" id="city-dd">
+            <summary id="city-summary">Город</summary>
+            <div class="dd__panel city-grid">
+              <button type="button" class="city-btn" data-city="Никополь">
+                Никополь
+              </button>
+              <button type="button" class="city-btn" data-city="Марганец">
+                Марганец
+              </button>
+              <button type="button" class="city-btn" data-city="Покров">
+                Покров
+              </button>
+              <button type="button" class="city-btn" data-city="Каменское">
+                Каменское
+              </button>
+              <button type="button" class="city-btn" data-city="Капуловка">
+                Капуловка
+              </button>
+              <button type="button" class="city-btn" data-city="Алексеевка">
+                Алексеевка
+              </button>
+              <button
+                type="button"
+                class="city-btn"
+                data-city="Красногригорьевка"
+              >
+                Красногригорьевка
+              </button>
+              <button type="button" class="city-btn" data-city="">
+                Другой
+              </button>
+            </div>
+            <div class="city-actions">
+              <button type="button" id="city-clear" class="chip">
+                Все города
+              </button>
+            </div>
+          </details>
+
+          <!-- Тип сделки -->
+          <details class="dd">
+            <summary>Тип сделки</summary>
+            <div class="dd__panel">
+              <button class="dd__item" type="button">Купля</button>
+              <button class="dd__item" type="button">Продажа</button>
+              <button class="dd__item" type="button">Отдам</button>
+              <button class="dd__item" type="button">Возьму в дар</button>
+            </div>
+          </details>
+        </div>
+      </header>
+
+      <div class="main">
+        <aside class="sidebar" id="sidebar">
+          <!-- Город (сайдбар) -->
+          <section class="side__section" id="side-city">
+            <h3 class="side__head">Город</h3>
+            <ul class="side__list">
+              <li>
+                <button type="button" class="chip" data-city="Никополь">
+                  Никополь
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chip" data-city="Марганец">
+                  Марганец
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chip" data-city="Покров">
+                  Покров
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chip" data-city="Каменское">
+                  Каменское
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chip" data-city="Капуловка">
+                  Капуловка
+                </button>
+              </li>
+              <li>
+                <button type="button" class="chip" data-city="Алексеевка">
+                  Алексеевка
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="chip"
+                  data-city="Красногригорьевка"
+                >
+                  Красногригорьевка
+                </button>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Город -->
+          <div class="side__section" id="side-city-list">
+            <h3 class="side__head">Город</h3>
+            <ul class="side__list">
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Никополь" />
+                  Никополь</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Марганец" />
+                  Марганец</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Покров" />
+                  Покров</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Каменское" />
+                  Каменское</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Капуловка" />
+                  Капуловка</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input type="checkbox" name="city" value="Алексеевка" />
+                  Алексеевка</label
+                >
+              </li>
+              <li>
+                <label
+                  ><input
+                    type="checkbox"
+                    name="city"
+                    value="Красногригорьевка"
+                  />
+                  Красногригорьевка</label
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- Категория -->
+          <section class="side__section" id="side-category">
+            <h3 class="side__head">Категория</h3>
+            <ul class="side__list">
+              <li>
+                <label><input type="checkbox" /> Авто-мото техника</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Квартиры</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Бытовая техника</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Животные</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Продукты питания</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Одежда</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Электроника</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Украшения</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Товары для детей</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Инструменты</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Строительство</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Искусство</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Свадебные украшения</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Услуги</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Прочее</label>
+              </li>
+            </ul>
+          </section>
+
+          <!-- Тип сделки -->
+          <section class="side__section" id="side-deal">
+            <h3 class="side__head">Тип сделки</h3>
+            <ul class="side__list">
+              <li>
+                <label><input type="checkbox" /> Купля</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Продажа</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Отдам</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Возьму в дар</label>
+              </li>
+            </ul>
+          </section>
+        </aside>
+
+        <!-- ПРАВАЯ ЧАСТЬ СТРАНИЦЫ -->
+        <section class="main__right">
+          <div id="list" class="cards"></div>
+        </section>
+      </div>
+
+      <!-- Боковая панель -->
+    </div>
+    <script src="./script.js?v=1" defer></script>
+    <div
+      id="apiStatus"
+      style="text-align: right; font-size: 12px; opacity: 0.85"
+    ></div>
+    <script>
+      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
+
+      async function apiStatus() {
+        try {
+          const r = await fetch(API + "/ads", { cache: "no-store" });
+          return r.ok;
+        } catch {
+          return false;
+        }
+      }
+      function showApiStatus(elId = "apiStatus") {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        apiStatus().then((ok) => {
+          el.textContent = ok ? "API: OK" : "API: OFFLINE";
+          el.style.color = ok ? "#16a34a" : "#ef4444";
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => showApiStatus());
+    </script>
+  </body>
 </html>
