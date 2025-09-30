@@ -986,3 +986,13 @@ textarea::placeholder {
 #feedbackList {
   display: none;
 }
+/* Тень для выпадающих фильтров "Город" и "Тип сделки" */
+.filters .dd {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* мягкая тень */
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.filters .dd:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* глубже при наведении */
+  transform: translateY(-2px); /* лёгкий подъём */
+}
