@@ -2,6 +2,8 @@
 <html lang="ru" spellcheck="true">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <link rel="stylesheet" href="index.css" />
     <title>Подать объявление</title>
     <style>
@@ -61,7 +63,7 @@
 
       .btn-left {
         display: flex;
-        gap: 8px; /* расстояние между "Сохранить" и "Сброс условий" */
+        gap: 16px; /* расстояние между "Сохранить" и "Сброс условий" */
       }
 
       .btn-right {
@@ -146,6 +148,359 @@
           width: 36px;
           height: 36px;
         }
+      }
+      /* ==== create.html: компакт на телефонах ==== */
+      @media (max-width: 480px) {
+        /* Заголовок формы */
+        .panel h1 {
+          font-size: 16px !important;
+          line-height: 1.15 !important;
+          margin: 0 0 8px !important;
+          letter-spacing: 0 !important;
+        }
+
+        /* Кнопки в шапке (Лента / Подать объявление) */
+        .bar .btn,
+        .nav .btn {
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+
+        /* Все основные кнопки внутри формы */
+        .btn {
+          padding: 8px 10px !important;
+          font-size: 14px !important;
+          line-height: 1.1 !important;
+          min-width: 0 !important;
+        }
+        .btn.green,
+        .btn.red,
+        .btn-outline {
+          font-size: 14px !important; /* раньше 18px */
+          padding: 8px 10px !important;
+          letter-spacing: 0.2px !important;
+        }
+
+        /* Ряд кнопок под формой — ужимаем и переносим */
+        .btn-row {
+          gap: 8px !important;
+          flex-wrap: wrap !important;
+        }
+        .btn-left,
+        .btn-right {
+          width: 100% !important;
+          display: flex !important;
+          gap: 8px !important;
+        }
+        .btn-left .btn,
+        .btn-right .btn {
+          flex: 1 1 140px !important;
+        }
+      }
+
+      /* Очень узкие устройства */
+      @media (max-width: 360px) {
+        .btn-left .btn,
+        .btn-right .btn {
+          flex-basis: 100% !important;
+        } /* в столбик */
+        .panel h1 {
+          font-size: 15px !important;
+        }
+      }
+      /* ==== create.html: верхние кнопки в столбик ==== */
+      @media (max-width: 480px) {
+        .bar .nav {
+          flex-direction: column !important; /* кнопки в столбик */
+          align-items: stretch !important; /* растягиваются на всю ширину */
+          gap: 6px !important; /* промежуток между кнопками */
+        }
+        .bar .nav .btn,
+        .bar .nav .btn-outline {
+          width: 100% !important; /* кнопка на всю ширину */
+          text-align: center !important; /* текст по центру */
+        }
+      }
+      @media (max-width: 480px) {
+        /* Уменьшаем заголовок "Продай-ка!" */
+        .brand_name {
+          font-size: 14px !important; /* было крупнее */
+          line-height: 1.2 !important;
+        }
+
+        /* Уменьшаем кнопку (ru) */
+        #langBtn {
+          order: -1 !important; /* под "Продай-ка!" */
+          align-self: flex-start !important;
+          font-size: 10px !important; /* ещё меньше текст */
+          padding: 2px 5px !important; /* компактные поля */
+          line-height: 1 !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 28px !important; /* минимальная ширина */
+          height: auto !important;
+        }
+      }
+      /* === MOBILE HEADER: grid-раскладка === */
+      @media (max-width: 480px) {
+        /* раскладываем .bar_inner как сетку */
+        .bar_inner {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "brand"
+            "lang"
+            "nav" !important;
+          row-gap: 6px !important;
+          width: 100% !important;
+          align-items: start !important;
+        }
+
+        /* элементы по областям */
+        .bar_inner .brand {
+          grid-area: brand !important;
+        }
+        .bar_inner #langBtn {
+          grid-area: lang !important;
+        }
+        .bar_inner .nav {
+          grid-area: nav !important;
+        }
+
+        /* компактные размеры */
+        .brand_name {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+        #langBtn {
+          margin: 0 !important;
+          justify-self: start !important;
+          font-size: 10px !important;
+          padding: 2px 5px !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 24px !important;
+          line-height: 1 !important;
+        }
+        .bar_inner .nav {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+          width: 100% !important;
+        }
+        .bar_inner .nav .btn,
+        .bar_inner .nav .btn-outline {
+          width: 100% !important;
+          text-align: center !important;
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+      }
+      /* === MOBILE HEADER: правильный порядок brand → ru → nav === */
+      @media (max-width: 480px) {
+        /* сам контейнер шапки — именно .bar__inner */
+        .bar__inner {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "brand"
+            "lang"
+            "nav" !important;
+          row-gap: 6px !important;
+          width: 100% !important;
+          align-items: start !important;
+        }
+
+        /* области сетки */
+        .bar__inner .brand {
+          grid-area: brand !important;
+        }
+        .bar__inner #langBtn {
+          grid-area: lang !important;
+        }
+        .bar__inner .nav {
+          grid-area: nav !important;
+          margin-left: 0 !important; /* сбиваем margin-left:auto; */
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+          width: 100% !important;
+        }
+
+        /* компактный бренд и мини-кнопка языка */
+        .brand__name {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+        #langBtn {
+          justify-self: start !important;
+          margin: 0 !important;
+          font-size: 10px !important;
+          padding: 2px 5px !important;
+          line-height: 1 !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 24px !important;
+        }
+
+        /* Лента / admin — каждая на всю ширину */
+        .bar__inner .nav .btn,
+        .bar__inner .nav .btn--sm {
+          width: 100% !important;
+          text-align: center !important;
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+      }
+      /* Шапка и кнопки влево */
+      .bar__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important; /* ← влево */
+        gap: 6px;
+        width: 100%;
+      }
+
+      #langBtn {
+        order: -1;
+        margin: 0; /* убираем auto */
+        align-self: flex-start; /* кнопка тоже влево */
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 5px;
+      }
+
+      /* Лента и admin в столбик, но тоже влево */
+      .bar__inner .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important; /* ← влево */
+        gap: 6px;
+        width: 100%;
+      }
+
+      .bar__inner .nav .btn {
+        width: auto !important; /* кнопки по содержимому */
+        text-align: left !important; /* текст тоже влево */
+        padding: 6px 12px;
+      }
+      /* Шапка: всё вправо */
+      .bar__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end !important; /* прижимаем вправо */
+        gap: 6px;
+        width: 100%;
+      }
+
+      /* кнопка ru тоже вправо */
+      #langBtn {
+        order: -1;
+        margin: 0;
+        align-self: flex-end !important; /* вправо */
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 5px;
+      }
+
+      /* Лента и admin в столбик справа */
+      .bar__inner .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end !important; /* вправо */
+        gap: 6px;
+        width: 100%;
+      }
+
+      .bar__inner .nav .btn {
+        width: auto !important;
+        text-align: right !important; /* текст тоже вправо */
+        padding: 6px 12px;
+      }
+      /* Делаем кнопки длиннее */
+      .bar__inner .nav .btn,
+      .bar__inner .nav .btn-outline {
+        width: 80% !important; /* кнопки займут 80% ширины блока */
+        max-width: 260px !important; /* ограничение, чтобы не слишком большие */
+        text-align: center !important; /* текст по центру */
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+      }
+      /* Кнопки Лента / admin / ru одинаковой длины и по центру */
+      #langBtn,
+      .bar__inner .nav .btn,
+      .bar__inner .nav .btn-outline {
+        display: block !important;
+        width: 80% !important; /* длина кнопки (80% ширины блока) */
+        max-width: 260px !important; /* ограничение максимума */
+        margin: 0 auto !important; /* центрируем */
+        text-align: center !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+      }
+      /* Заглавный текст "Подать объявление" */
+      .panel h1 {
+        font-size: 20px !important; /* было меньше, сделаем крупнее */
+        font-weight: bold !important;
+        margin-bottom: 10px; /* немного отступа вниз */
+        text-align: center; /* можно центрировать */
+      }
+      /* === DESKTOP RESET (широкие экраны) === */
+      @media (min-width: 769px) {
+        /* шапка обратно в одну строку */
+        .bar__inner {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          gap: 12px !important;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        /* кнопка языка снова справа/рядом, обычного размера */
+        #langBtn {
+          order: 0 !important;
+          align-self: auto !important;
+          margin: 0 0 0 12px !important; /* небольшой отступ слева */
+          width: auto !important;
+          min-width: 0 !important;
+          font-size: 14px !important;
+          padding: 6px 10px !important;
+        }
+
+        /* навигация в строку */
+        .bar__inner .nav {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          gap: 8px !important;
+          width: auto !important;
+        }
+
+        /* убираем мобильную ширину 80% и центрирование */
+        .bar__inner .nav .btn,
+        .bar__inner .nav .btn-outline {
+          width: auto !important;
+          max-width: none !important;
+          margin: 0 !important;
+          text-align: center !important;
+          padding: 8px 12px !important;
+          font-size: 14px !important;
+        }
+      }
+      .news-panel {
+        max-width: 90%; /* блок станет уже общего контейнера */
+        margin: 0 auto; /* центрируем */
       }
     </style>
   </head>

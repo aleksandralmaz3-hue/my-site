@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="index.css" />
     <title>Продай-ка!</title>
     <style>
-      /* ===== Сброс и база ===== */
+      /* ===== Сброс и база (как было) ===== */
       *,
       *::before,
       *::after {
@@ -20,8 +20,8 @@
         margin: 0;
         font: 16px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Arial,
           sans-serif;
-        color: #111827; /* текст */
-        background: #bababe; /* фон */
+        color: #111827;
+        background: #bababe;
       }
       a {
         color: inherit;
@@ -89,12 +89,13 @@
         background: #f9fafb;
       }
 
-      /* ===== Блок фильтров ===== */
+      /* ===== Верхние выпадашки (как было) ===== */
       .filters {
         margin-top: 4px;
         display: grid;
         gap: 10px;
         grid-template-columns: 1fr;
+        align-items: flex-start;
       }
       @media (min-width: 640px) {
         .filters {
@@ -106,8 +107,6 @@
           grid-template-columns: repeat(3, 1fr);
         }
       }
-
-      /* Выпадашка на <details> */
       .dd {
         border: 1px solid #d1d5db;
         background: #fff;
@@ -126,10 +125,9 @@
         align-items: center;
         justify-content: space-between;
         gap: 8px;
-        min-height: 44px; /* можно 40–44px, как тебе нравится */
-        line-height: 1; /* исключаем разницу из-за межстрочного */
+        min-height: 44px;
+        line-height: 1;
       }
-
       .dd > summary::after {
         content: "▾";
         font-size: 12px;
@@ -139,15 +137,8 @@
         content: "▴";
       }
       .dd__panel {
-        display: none; /* было: display: grid; */
-        margin-top: 0; /* переносим отступ в состояние open */
-        padding: 0; /* переносим в состояние open */
-        border-top: 0; /* переносим в состояние open */
-        max-height: none; /* переносим в состояние open */
-        overflow: visible; /* переносим в состояние open */
+        display: none;
       }
-
-      /* Когда <details> открыт — показать панель и вернуть оформление */
       .dd[open] .dd__panel {
         display: grid;
         gap: 6px;
@@ -158,20 +149,6 @@
         overflow: auto;
       }
 
-      /* Скрывать содержимое закрытых <details> */
-      .dd:not([open]) .dd__panel {
-        display: none !important;
-      }
-
-      .dd__item {
-        padding: 6px 8px;
-        border-radius: 6px;
-      }
-      .dd__item:hover {
-        background: #f3f4f6;
-      }
-
-      /* Поле ввода телефона */
       .field {
         display: flex;
         gap: 8px;
@@ -196,51 +173,9 @@
         border-radius: 8px;
         background: #fff;
       }
-
-      .filters {
-        align-items: flex-start;
-      }
-      /* ====== АДАПТИВ ДЛЯ ОСНОВЫ (ПК/ноут/планшет/телефон) ====== */
-
-      /* Бейзлайн (телефон, ≤480–640px) */
-      .main {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: 1fr; /* всё в одну колонку */
-        align-items: start;
-      }
-      .sidebar {
-        order: 2; /* фильтры под списком объявлений */
-      }
-      .main__right {
-        order: 1;
-      }
-
-      /* Утилиты/кнопки/мелочи (если не объявлены выше) */
-      .chip {
-        padding: 8px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        background: #fff;
-      }
-      .chip:active {
-        transform: translateY(1px);
-      }
       .muted {
         color: #6b7280;
         font-size: 12px;
-      }
-      #phone-form {
-        display: flex;
-        gap: 8px;
-      }
-      #phone-form input#phone {
-        flex: 1;
-        min-width: 0;
-        padding: 10px 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #fff;
       }
       .city-grid {
         display: grid;
@@ -259,76 +194,21 @@
         padding: 0 8px 8px;
       }
 
-      /* Карточки объявлений — сетка и отступы */
-      .cards {
+      /* ===== Основная сетка: левый сайдбар + правая лента объявлений ===== */
+      .main {
         display: grid;
-        gap: 8px;
+        gap: 12px;
+        grid-template-columns: 1fr;
+        align-items: start;
       }
-      @media (min-width: 480px) {
-        .cards {
-          gap: 10px;
-        }
+      .sidebar {
+        order: 2;
       }
-
-      /* Планшет (≥640px) — две колонки: узкий сайдбар + контент */
-      @media (min-width: 640px) {
-        .main {
-          grid-template-columns: 220px 1fr;
-        }
-        .sidebar {
-          order: 1;
-          position: sticky;
-          top: 90px; /* держим боковуху под шапкой */
-          align-self: start;
-        }
-        .main__right {
-          order: 2;
-        }
-        .city-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
+      .main__right {
+        order: 1;
       }
 
-      /* Ноутбук (≥960px) — шире сайдбар, дыхание у карточек */
-      @media (min-width: 960px) {
-        .wrap {
-          max-width: 1100px;
-        } /* уже есть, оставляем как есть */
-        .main {
-          grid-template-columns: 260px 1fr;
-          gap: 14px;
-        }
-        .cards {
-          gap: 12px;
-        }
-        .city-grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-      }
-
-      /* ПК/широкие (≥1200px) — комфортные поля и сетка карточек плотнее */
-      @media (min-width: 1200px) {
-        .wrap {
-          max-width: 1240px;
-        }
-        .main {
-          grid-template-columns: 280px 1fr;
-        }
-        .cards {
-          gap: 14px;
-        }
-      }
-
-      /* Вид карточки (если список собирает script.js — задаём «пилюлю» как на макете) */
-      .cards > * {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 10px 12px;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
-      }
-
-      /* Заголовки и списки в сайдбаре (визуал как на скрине) */
+      /* Сайдбар (левая панель с квадратиками — как было) */
       .side__section {
         background: #e5e7eb;
         border: 1px solid #d1d5db;
@@ -349,21 +229,33 @@
         display: grid;
         gap: 6px;
       }
-      .side__list label,
-      .side__list .chip {
-        font-size: 14px;
+      .chip {
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
       }
-      /* бейдж «Осталось 6 дн.» */
-      .ad-expire {
-        max-width: 92px; /* чтобы был предел ширины */
-        white-space: normal; /* разрешаем перенос строк */
-        overflow-wrap: anywhere; /* переносим при нехватке места */
-        word-break: normal; /* не ломаем слова лишнего */
-        hyphens: auto; /* ставим дефисы по словарю */
-        line-height: 1.2;
-        text-align: center;
+      .chip:active {
+        transform: translateY(1px);
       }
-      /* Карточка: текст слева, бейдж справа */
+
+      /* Карточки объявлений (справа) */
+      .cards {
+        display: grid;
+        gap: 8px;
+      }
+      @media (min-width: 480px) {
+        .cards {
+          gap: 10px;
+        }
+      }
+      .cards > * {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 10px 12px;
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+      }
       .ad-row {
         display: flex;
         align-items: flex-start;
@@ -376,7 +268,6 @@
         overflow-wrap: anywhere;
         hyphens: auto;
       }
-      /* Пилюля дней */
       .ad-expire {
         flex: 0 0 auto;
         padding: 6px 10px;
@@ -386,81 +277,124 @@
         box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
         white-space: nowrap;
         font-weight: 600;
+        max-width: 92px;
+        overflow-wrap: anywhere;
+        line-height: 1.2;
+        text-align: center;
       }
-      @media (max-width: 340px) {
-        .ad-expire {
-          white-space: normal;
-          overflow-wrap: anywhere;
-          hyphens: auto;
-          text-align: center;
+
+      /* Планшет/десктоп — 2 колонки */
+      @media (min-width: 640px) {
+        .main {
+          grid-template-columns: 220px 1fr;
+        }
+        .sidebar {
+          order: 1;
+          position: sticky;
+          top: 90px;
+          align-self: start;
+        }
+        .main__right {
+          order: 2;
+        }
+        .city-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 960px) {
+        .wrap {
+          max-width: 1100px;
+        }
+        .main {
+          grid-template-columns: 260px 1fr;
+          gap: 14px;
+        }
+        .cards {
+          gap: 12px;
+        }
+        .city-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 1200px) {
+        .wrap {
+          max-width: 1240px;
+        }
+        .main {
+          grid-template-columns: 280px 1fr;
         }
       }
 
-      /* === ФИКС АДАПТИВА ХЕДЕРА (кнопка не вылазит) === */
+      /* ===== МОБИЛЬНАЯ КНОПКА-ФИЛЬТР (Единственное новое) ===== */
+      .m-filters {
+        display: none;
+        margin: 10px 0;
+      }
+      .m-filters > summary {
+        min-height: 44px;
+      }
+      .m-filters__panel {
+        /* содержимое клонируется из левого сайдбара */
+      }
+
+      /* Телефон/узкий планшет: скрываем левый сайдбар, показываем кнопку */
+      @media (max-width: 768px) {
+        .sidebar {
+          display: none !important;
+        } /* левая панель прячется */
+        .main {
+          grid-template-columns: 1fr !important;
+        } /* одна колонка */
+        .m-filters {
+          display: block;
+        } /* показываем кнопку */
+        .m-filters[open] .m-filters__panel {
+          margin-top: 8px;
+          padding: 8px;
+          border: 1px dashed #e5e7eb;
+          border-radius: 8px;
+          background: #fff;
+        }
+      }
+
+      /* Фикс шапки для очень узких экранов */
       @media (max-width: 420px) {
         .wrap {
           padding: 0 8px;
-        } /* чуть меньше поля контейнера */
-
+        }
         .bar__row {
-          flex-wrap: wrap; /* разрешаем перенос на 2-ю строку */
+          flex-wrap: wrap;
           gap: 8px;
         }
-
         .nav {
           width: 100%;
           display: flex;
           gap: 8px;
           justify-content: space-between;
         }
-
         .nav .chip,
         .nav .btn {
-          flex: 1; /* кнопки тянутся равномерно */
+          flex: 1;
           min-width: 0;
           max-width: 100%;
-          white-space: normal; /* разрешаем перенос текста */
+          white-space: normal;
           overflow-wrap: anywhere;
           line-height: 1.2;
           text-align: center;
-          padding: 8px 10px; /* компактнее на телефоне */
+          padding: 8px 10px;
           font-size: 14px;
-        }
-      }
-
-      .ad-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-      }
-      .ad-text {
-        flex: 1;
-        min-width: 0;
-        overflow-wrap: anywhere;
-        hyphens: auto;
-      }
-      .ad-expire {
-        flex: 0 0 auto;
-        white-space: nowrap;
-      }
-      @media (max-width: 340px) {
-        .ad-expire {
-          white-space: normal;
-          overflow-wrap: anywhere;
-          hyphens: auto;
-          text-align: center;
         }
       }
     </style>
   </head>
+
   <body>
     <div class="wrap">
       <!-- ===== ШАПКА ===== -->
       <header class="bar">
         <div class="bar__row">
           <a class="brand" href="#">
-            <span class="brand__logo">🏷️</span>
-            <span>Продай-ка!</span>
+            <span class="brand__logo">🏷️</span><span>Продай-ка!</span>
           </a>
           <nav class="nav">
             <button type="button" id="feed-reset" class="chip">Лента</button>
@@ -468,9 +402,9 @@
           </nav>
         </div>
 
-        <!-- ===== ФИЛЬТРЫ ===== -->
+        <!-- ===== ВЕРХНИЕ ВЫПАДАШКИ КАК БЫЛО ===== -->
         <div class="filters">
-          <!-- ПО НОМЕРУ ТЕЛЕФОНА -->
+          <!-- По номеру телефона -->
           <details class="dd" id="phone-dd">
             <summary class="chip">По номеру телефона</summary>
             <div class="dd__panel">
@@ -485,7 +419,6 @@
                   autocapitalize="off"
                   spellcheck="false"
                 />
-
                 <button type="button" id="phone-search" class="chip">
                   Найти
                 </button>
@@ -501,7 +434,7 @@
 
           <!-- Город -->
           <details class="dd" id="city-dd">
-            <summary id="city-summary">Город</summary>
+            <summary id="city-summary" class="chip">Город</summary>
             <div class="dd__panel city-grid">
               <button type="button" class="city-btn" data-city="Никополь">
                 Никополь
@@ -540,8 +473,8 @@
           </details>
 
           <!-- Тип сделки -->
-          <details class="dd">
-            <summary>Тип сделки</summary>
+          <details class="dd" id="deal-dd">
+            <summary class="chip">Тип сделки</summary>
             <div class="dd__panel">
               <button class="dd__item" type="button">Купля</button>
               <button class="dd__item" type="button">Продажа</button>
@@ -552,9 +485,17 @@
         </div>
       </header>
 
+      <!-- ===== ЕДИНСТВЕННОЕ НОВОЕ: МОБИЛЬНАЯ КНОПКА-ФИЛЬТР ===== -->
+      <details id="mFilters" class="m-filters" aria-label="Фильтры">
+        <summary class="chip">Фильтры</summary>
+        <div class="m-filters__panel"></div>
+      </details>
+
+      <!-- ===== ОСНОВА: Левый блок с «квадратиками» + Правая лента объявлений ===== -->
       <div class="main">
+        <!-- Левый блок (как был) -->
         <aside class="sidebar" id="sidebar">
-          <!-- Город (сайдбар) -->
+          <!-- Кнопочные города -->
           <section class="side__section" id="side-city">
             <h3 class="side__head">Город</h3>
             <ul class="side__list">
@@ -600,7 +541,7 @@
             </ul>
           </section>
 
-          <!-- Город -->
+          <!-- Город (чекбоксы) -->
           <div class="side__section" id="side-city-list">
             <h3 class="side__head">Город</h3>
             <ul class="side__list">
@@ -725,22 +666,23 @@
           </section>
         </aside>
 
-        <!-- ПРАВАЯ ЧАСТЬ СТРАНИЦЫ -->
+        <!-- Правая колонка — лента объявлений -->
         <section class="main__right">
           <div id="list" class="cards"></div>
         </section>
       </div>
-
-      <!-- Боковая панель -->
     </div>
+
+    <!-- Твой скрипт -->
     <script src="./script.js?v=1" defer></script>
+
+    <!-- Индикатор API (как было) -->
     <div
       id="apiStatus"
       style="text-align: right; font-size: 12px; opacity: 0.85"
     ></div>
     <script>
-      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
-
+      const API = "http://localhost:3000";
       async function apiStatus() {
         try {
           const r = await fetch(API + "/ads", { cache: "no-store" });
@@ -749,8 +691,8 @@
           return false;
         }
       }
-      function showApiStatus(elId = "apiStatus") {
-        const el = document.getElementById(elId);
+      function showApiStatus(id = "apiStatus") {
+        const el = document.getElementById(id);
         if (!el) return;
         apiStatus().then((ok) => {
           el.textContent = ok ? "API: OK" : "API: OFFLINE";
@@ -758,6 +700,44 @@
         });
       }
       document.addEventListener("DOMContentLoaded", () => showApiStatus());
+    </script>
+
+    <!-- Новое: сборка мобильной выпадашки из левого сайдбара -->
+    <script>
+      (function () {
+        const wrap = document.getElementById("mFilters");
+        const panel = document.querySelector(".m-filters__panel");
+        if (!wrap || !panel) return;
+
+        const BP = "(max-width: 768px)";
+        const mq = window.matchMedia(BP);
+
+        function stripIds(root) {
+          root.removeAttribute("id");
+          root.querySelectorAll("[id]").forEach((n) => n.removeAttribute("id"));
+        }
+        function build() {
+          if (!window.matchMedia(BP).matches) return; // только на мобайле
+          panel.innerHTML = "";
+          ["#side-city-list", "#side-category", "#side-deal"].forEach((sel) => {
+            const sec = document.querySelector(sel);
+            if (sec) {
+              const clone = sec.cloneNode(true);
+              stripIds(clone);
+              panel.appendChild(clone);
+            }
+          });
+        }
+        if (mq.matches) build();
+        mq.addEventListener?.("change", (e) => {
+          if (e.matches) {
+            build();
+          } else {
+            wrap.open = false;
+            panel.innerHTML = "";
+          }
+        });
+      })();
     </script>
   </body>
 </html>
