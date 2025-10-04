@@ -918,6 +918,24 @@
           margin-top: 0 !important;
         } /* убираем «ступеньку» */
       }
+      /* >280px: чек-боксы "Категория" в две колонки */
+      @media (min-width: 281px) {
+        #side-category .side__list {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 6px !important;
+        }
+        #side-category .side__list label {
+          display: grid !important; /* квадрат + текст в строке */
+          grid-template-columns: 16px 1fr !important;
+          column-gap: 8px !important;
+          align-items: center !important;
+        }
+        #side-category .side__list input[type="checkbox"] {
+          width: 14px !important;
+          height: 14px !important;
+        }
+      }
     </style>
   </head>
   <body>
