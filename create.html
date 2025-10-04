@@ -497,11 +497,6 @@
           padding: 8px 12px !important;
           font-size: 14px !important;
         }
-      }
-      .news-panel {
-        max-width: 90%; /* блок станет уже общего контейнера */
-        margin: 0 auto; /* центрируем */
-      }
     </style>
   </head>
   <body>
@@ -517,11 +512,6 @@
             <a href="index.html" class="btn btn--sm">Лента</a>
             <a href="admin.html" class="btn btn--sm">admin</a>
           </nav>
-
-          <!-- Кнопка языка ВСЕГДА справа -->
-          <button id="langBtn" class="lang-btn" type="button">
-            <span class="lang-flag">ru</span>
-          </button>
         </div>
       </header>
       <main class="panel">
@@ -550,22 +540,17 @@
         <!-- Категория -->
         <label for="category">Категория</label>
         <select id="category" required>
-          <option value="" disabled selected>Например: Квартиры</option>
-          <option value="Авто-мото техника">Авто-мото техника</option>
-          <option value="Квартиры">Квартиры</option>
-          <option value="Бытовая техника">Бытовая техника</option>
-          <option value="Животные">Животные</option>
-          <option value="Продукты питания">Продукты питания</option>
-          <option value="Одежда">Одежда</option>
-          <option value="Электроника">Электроника</option>
-          <option value="Украшения">Украшения</option>
-          <option value="Товары для детей">Товары для детей</option>
-          <option value="Инструменты">Инструменты</option>
-          <option value="Строительство">Строительство</option>
-          <option value="Искусство">Искусство</option>
-          <option value="Свадебные украшения">Свадебные украшения</option>
-          <option value="Услуги">Услуги</option>
-          <option value="Прочее">Прочее</option>
+          <option value="" disabled selected>Например: Жильё</option>
+          <option value="Авто-мото техника">Транспорт</option>
+          <option value="Квартиры">Жильё</option>
+          <option value="Бытовая техника">Техника</option>
+          <option value="Животные">Электроника</option>
+          <option value="Продукты питания">Стройка</option>
+          <option value="Одежда">Продукты</option>
+          <option value="Электроника">Одежда</option>
+          <option value="Украшения">Животные</option>
+          <option value="Товары для детей">Прочее</option>
+          <option value="Инструменты">Услуги</option>
         </select>
 
         <label>Вид товара</label>

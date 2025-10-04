@@ -451,112 +451,472 @@
           text-align: center;
         }
       }
-      /* === Телефон очень маленький (≤340px): панель выше объявлений === */
+      /* 340px: объявления под чек-боксами */
       @media (max-width: 340px) {
         .main {
-          display: grid;
-          grid-template-columns: 1fr; /* всё в одну колонку */
-          gap: 12px;
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 10px !important;
         }
         .sidebar {
-          order: 1 !important; /* панель первой */
-        }
+          order: 1 !important;
+        } /* Категории (чек-боксы) — выше */
         .main__right {
-          order: 2 !important; /* лента второй */
+          order: 2 !important;
+        } /* Лента объявлений — ниже */
+      }
+      /* 340px: чекбоксы (Категория) во всю ширину интерфейса */
+      @media (max-width: 340px) {
+        /* убираем двухколоночную сетку и фикс 200px */
+        .main {
+          display: block !important;
+          grid-template-columns: none !important;
+        }
+
+        /* растягиваем левую колонку */
+        .sidebar {
+          width: 100% !important;
+        }
+
+        /* сам блок категорий на всю ширину контейнера */
+        #side-category,
+        .side__section {
+          width: 100% !important;
+          box-sizing: border-box !important;
+        }
+
+        /* строки списка лишь выравниваем — высоту не меняем */
+        .side__list label {
+          width: 100% !important;
+          box-sizing: border-box !important;
         }
       }
-      /* === Телефон (≤420px): панель выше объявлений === */
-      @media (max-width: 420px) {
+      /* === 340px: скрыть заголовок "Категория" === */
+      @media (max-width: 340px) {
+        .side__head {
+          display: none !important;
+        }
+      }
+      /* === 340px: скрыть кнопку "По номеру телефона" === */
+      @media (max-width: 340px) {
+        #phone-dd {
+          display: none !important;
+          visibility: hidden !important;
+        }
+      }
+      .title {
+        padding: 0px;
+        margin: 0px;
+      }
+      /* 340px: фикс выпадашки "Город" — открывается прямо под кнопкой */
+      @media (max-width: 340px) {
+        /* сброс любых прежних смещений */
+        #city-dd,
+        .filters details.dd:nth-of-type(3) {
+          top: auto !important;
+        }
+
+        #city-dd {
+          position: relative !important;
+          overflow: visible !important;
+          z-index: 4000 !important;
+        }
+        #city-dd > .dd__panel {
+          position: absolute !important;
+          top: calc(100% + 4px) !important;
+          left: 0 !important;
+          right: 0 !important;
+          margin: 0 !important;
+          display: grid !important;
+          padding: 8px !important;
+          background: #fff !important;
+          border: 1px solid #d1d5db !important;
+          border-radius: 10px !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14) !important;
+          max-height: 55vh !important;
+          overflow: auto !important;
+          z-index: 4001 !important;
+        }
+      }
+      /* === 340px: убрать светлую рамку у блока "Категория" === */
+      @media (max-width: 340px) {
+        #sidebar,
+        #side-category,
+        .side__section {
+          border: none !important;
+          box-shadow: none !important;
+          background: #d4d4d8 !important; /* сохраняем общий фон */
+        }
+      }
+      /* === 340px: уменьшить серый блок "Категория" === */
+      @media (max-width: 340px) {
+        .sidebar {
+          padding: 4px 6px !important;
+          margin: 0 !important;
+        }
+
+        #side-category {
+          padding: 4px 6px !important;
+          margin: 0 !important;
+          border-radius: 8px !important;
+        }
+
+        #side-category .side__list {
+          gap: 2px !important;
+        }
+
+        #side-category .side__list label {
+          font-size: 12px !important;
+          line-height: 1.1 !important;
+          padding: 2px 0 !important;
+        }
+      }
+      /* === Уменьшение шрифта объявлений (текст остаётся жирным) === */
+      @media (max-width: 340px) {
+        .cards .card p,
+        .ad-text {
+          font-size: 13px !important;
+          font-weight: 600 !important;
+          line-height: 1.2 !important;
+        }
+      }
+      /* === Уменьшить шрифт текста объявлений на один пункт (жирность оставить) === */
+      @media (max-width: 340px) {
+        .ad-text,
+        .card__title,
+        .cards .card p {
+          font-size: 15px !important; /* было ~16px → минус один пункт */
+          font-weight: 500 !important; /* жирность сохраняем */
+          line-height: 1.2 !important;
+          margin: 0 !important;
+        }
+      }
+      /* === Нижнее описание: курсив и подчёркивание === */
+      @media (max-width: 340px) {
+        .card__desc,
+        .ad-text:last-child,
+        .cards .card p:last-child {
+          font-style: italic !important;
+          text-decoration: underline !important;
+        }
+      }
+      .ad-expire {
+        position: relative;
+        z-index: 1000 !important; /* поднимаем поверх других слоёв */
+      }
+      /* === Адаптация карточек под содержимое === */
+      .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: auto !important; /* убираем фикс */
+        height: auto !important; /* подстраивается под контент */
+        padding: 12px 14px !important;
+        background: #fff;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      /* 327–540px: чек-боксы (Категория) вверху, на всю ширину */
+      @media (min-width: 327px) and (max-width: 540px) {
         .main {
-          display: grid;
-          grid-template-columns: 1fr; /* одна колонка */
-          gap: 12px;
+          /* ленту и сайдбар складываем в колонку */
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 10px !important;
         }
         .sidebar {
-          order: 1 !important; /* панель первой */
+          /* блок категорий — выше ленты */
+          order: 1 !important;
+          width: 100% !important;
+          position: static !important;
+          margin: 0 !important;
+          align-self: stretch !important;
+          padding: 6px 8px !important;
         }
         .main__right {
-          order: 2 !important; /* лента второй */
+          /* лента объявлений — ниже */
+          order: 2 !important;
+        }
+        #side-category,
+        .side__section {
+          /* растянуть сам блок категорий */
+          width: 100% !important;
+          box-sizing: border-box !important;
+          border-radius: 10px !important;
+        }
+        #side-category .side__list {
+          /* сетка пунктов — компактно */
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important;
+          gap: 6px !important;
+        }
+        #side-category .side__list label {
+          font-size: 14px !important;
+          line-height: 1.2 !important;
+          padding: 2px 0 !important;
+          grid-template-columns: 16px 1fr !important; /* квадратик + текст */
+          column-gap: 8px !important;
         }
       }
-      /* === Телефон и узкие планшеты (≤630px): панель сбоку, карточки компактнее === */
-      @media (max-width: 630px) {
+      /* >400px: сайдбар слева, лента справа (2 колонки) */
+      @media (min-width: 401px) and (max-width: 639px) {
         .main {
-          display: grid;
-          grid-template-columns: 200px 1fr; /* слева sidebar, справа объявления */
-          gap: 10px;
+          display: grid !important;
+          grid-template-columns: 240px 1fr !important; /* ширина сайдбара */
+          gap: 12px !important;
+          align-items: start !important;
         }
 
         .sidebar {
           order: 1 !important;
+          width: 240px !important;
+          position: sticky !important;
+          top: var(--bar-h, 56px) !important; /* под шапкой */
+          align-self: start !important;
         }
-
         .main__right {
           order: 2 !important;
         }
 
-        /* карточки компактнее */
-        .cards > .card {
-          padding: 8px 10px !important;
+        /* внутри категорий — одна колонка, компактно */
+        #side-category .side__list {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 6px !important;
+        }
+        #side-category .side__list label {
+          display: grid !important;
+          grid-template-columns: 16px 1fr !important;
+          column-gap: 8px !important;
           font-size: 14px !important;
-        }
-        .card__title {
-          font-size: 13px !important;
-        }
-        .card__meta {
-          font-size: 11px !important;
-        }
-        .card__desc {
-          font-size: 13px !important;
-          line-height: 1.3 !important;
+          line-height: 1.2 !important;
         }
       }
-      /* === Поповер-выпадашки (≤630px): поверх, не толкают макет === */
-      @media (max-width: 630px) {
-        /* шапку и фильтры поднимаем выше остального */
-        .bar {
-          z-index: 3000 !important;
+      /* === >400px: чек-боксы уже и компактнее === */
+      @media (min-width: 401px) {
+        .sidebar {
+          width: 180px !important; /* делаем панель уже */
+          padding: 6px 8px !important;
+        }
+
+        #side-category,
+        .side__section {
+          padding: 6px 8px !important;
+          border-radius: 10px !important;
+        }
+
+        #side-category .side__list {
+          gap: 4px !important; /* плотнее строки */
+        }
+
+        #side-category .side__list label {
+          font-size: 13px !important; /* немного меньше шрифт */
+          line-height: 1.1 !important;
+          grid-template-columns: 14px 1fr !important; /* квадрат + текст */
+          column-gap: 6px !important;
+        }
+
+        #side-category .side__list input[type="checkbox"] {
+          width: 12px !important; /* меньше квадраты */
+          height: 12px !important;
+        }
+      }
+      /* >400px: всё влезает, без обрезки карточек */
+      @media (min-width: 401px) and (max-width: 639px) {
+        /* контейнер шире, чем 70vw — иначе правая колонка слишком узкая */
+        .wrap {
+          max-width: 96vw !important; /* даём месту карточкам */
+        }
+      }
+
+      /* сетка: узкий сайдбар + контент */
+      .main {
+        display: grid !important;
+        grid-template-columns: 180px 1fr !important; /* уже левую панель */
+        gap: 10px !important;
+        align-items: start !important;
+      }
+
+      .sidebar {
+        width: 180px !important;
+      }
+
+      /* правая колонка не режет тени/края карточек */
+      .main__right {
+        overflow: visible !important; /* убираем clipping по бокам */
+      }
+
+      /* список — свой скролл, запас под скроллбар */
+      #list {
+        overflow-y: auto !important;
+        padding-right: 10px !important; /* чтобы скролл не накрыв*/
+      }
+      /* >640px: уменьшенные и выровненные в ряд фильтры */
+      @media (min-width: 641px) {
+        .filters {
+          display: grid !important;
+          grid-template-columns: repeat(
+            3,
+            1fr
+          ) !important; /* три равных блока */
+          gap: 8px !important;
+          align-items: center !important;
+        }
+
+        .title {
+          display: contents !important; /* расплющиваем обёртку */
+        }
+
+        .filters .dd {
+          padding: 2px !important;
+          border-radius: 6px !important;
+        }
+
+        .filters .dd > summary {
+          min-height: 32px !important;
+          padding: 4px 6px !important;
+          font-size: 13px !important; /* чуть меньше текста */
+          font-weight: 500 !important;
+        }
+
+        .filters .dd + .dd {
+          margin-top: 0 !important;
+        }
+      }
+      /* >640px: выравнивание фильтров по одной линии */
+      @media (min-width: 641px) {
+        .filters {
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr) !important;
+          gap: 8px !important;
+          align-items: center !important; /* все на один уровень */
+        }
+
+        .title {
+          display: contents !important; /* расплющиваем обёртку */
+        }
+
+        /* снимаем вертикальные смещения */
+        .filters .dd,
+        .filters .dd + .dd {
+          margin-top: 0 !important;
+          transform: translateY(0) !important;
+          vertical-align: middle !important;
+        }
+      }
+      /* === STABILIZER: строгие диапазоны без пересечений === */
+
+      /* ≤340px — всё в одну колонку, сайдбар сверху, ничего не выпадает */
+      @media (max-width: 340px) {
+        .wrap {
+          padding: 0 8px !important;
+        }
+        .main {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 10px !important;
+        }
+        .sidebar {
+          order: 1 !important;
+          width: 100% !important;
+          position: static !important;
+          margin: 0 !important;
+        }
+        .main__right {
+          order: 2 !important;
           overflow: visible !important;
         }
         .filters {
-          position: relative;
-        }
-
-        /* базовый слой для всех дропдаунов */
-        .filters .dd {
-          position: relative;
-          z-index: 1;
-        }
-
-        /* открытый дропдаун всегда НАД соседями */
-        .filters .dd[open] {
-          z-index: 3001;
-        }
-
-        /* сама панель — абсолютный поповер под summary */
-        .dd[open] > .dd__panel {
-          position: absolute !important;
-          top: calc(100% + 6px) !important;
-          left: 6px;
-          right: 6px;
           display: grid !important;
-          gap: 6px;
-          margin: 0 !important;
-          padding: 8px !important;
-          border-top: none !important;
-          background: #fff;
-          border: 1px solid #d1d5db;
-          border-radius: 10px;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-          max-height: 55vh !important; /* свой скролл */
-          overflow: auto !important;
-          z-index: 3002; /* над всем в .filters */
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
         }
-
-        /* закрытая панель — прячем жёстко */
-        .dd .dd__panel {
+        .title {
+          display: contents !important;
+        }
+        .dd > summary {
+          min-height: 36px !important;
+        }
+        /* панели выпадашек прямо под кнопкой */
+        .dd__panel {
+          position: absolute !important;
+          top: calc(100% + 4px) !important;
+          left: 0;
+          right: 0;
+          z-index: 4001;
+        }
+        .dd:not([open]) .dd__panel {
           display: none !important;
         }
+      }
+
+      /* 327–540px — сайдбар (чекбоксы) СВЕРХУ на всю ширину */
+      @media (min-width: 327px) and (max-width: 540px) {
+        .main {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 10px !important;
+        }
+        .sidebar {
+          order: 1 !important;
+          width: 100% !important;
+          position: static !important;
+        }
+        .main__right {
+          order: 2 !important;
+        }
+      }
+
+      /* 401–639px — два столбца: узкий сайдбар слева + контент, всё помещается */
+      @media (min-width: 401px) and (max-width: 639px) {
+        .wrap {
+          max-width: 96vw !important;
+        }
+        .main {
+          display: grid !important;
+          grid-template-columns: 180px 1fr !important;
+          gap: 10px !important;
+          align-items: start !important;
+        }
+        .sidebar {
+          width: 180px !important;
+          position: sticky !important;
+          top: var(--bar-h, 56px) !important;
+          align-self: start !important;
+        }
+        .main__right {
+          overflow: visible !important;
+        }
+        #list {
+          overflow-y: auto !important;
+          padding-right: 10px !important;
+        }
+      }
+
+      /* ≥641px — верхние три фильтра в ОДИН ряд, компактные и на одном уровне */
+      @media (min-width: 641px) {
+        .filters {
+          display: grid !important;
+          grid-template-columns: repeat(3, 1fr) !important;
+          gap: 8px !important;
+          align-items: center !important;
+        }
+        .title {
+          display: contents !important;
+        } /* расплющиваем обёртку */
+        .filters .dd {
+          padding: 2px !important;
+          border-radius: 6px !important;
+        }
+        .filters .dd > summary {
+          min-height: 32px !important;
+          padding: 4px 6px !important;
+          font-size: 13px !important;
+        }
+        .filters .dd + .dd {
+          margin-top: 0 !important;
+        } /* убираем «ступеньку» */
       }
     </style>
   </head>
@@ -605,57 +965,58 @@
               >
             </div>
           </details>
+          <div class="title">
+            <!-- Город -->
+            <details class="dd" id="city-dd">
+              <summary id="city-summary">Город</summary>
+              <div class="dd__panel city-grid">
+                <button type="button" class="city-btn" data-city="Никополь">
+                  Никополь
+                </button>
+                <button type="button" class="city-btn" data-city="Марганец">
+                  Марганец
+                </button>
+                <button type="button" class="city-btn" data-city="Покров">
+                  Покров
+                </button>
+                <button type="button" class="city-btn" data-city="Каменское">
+                  Каменское
+                </button>
+                <button type="button" class="city-btn" data-city="Капуловка">
+                  Капуловка
+                </button>
+                <button type="button" class="city-btn" data-city="Алексеевка">
+                  Алексеевка
+                </button>
+                <button
+                  type="button"
+                  class="city-btn"
+                  data-city="Красногригорьевка"
+                >
+                  Красногригорьевка
+                </button>
+                <button type="button" class="city-btn" data-city="">
+                  Другой
+                </button>
+              </div>
+              <div class="city-actions">
+                <button type="button" id="city-clear" class="chip">
+                  Все города
+                </button>
+              </div>
+            </details>
 
-          <!-- Город -->
-          <details class="dd" id="city-dd">
-            <summary id="city-summary">Город</summary>
-            <div class="dd__panel city-grid">
-              <button type="button" class="city-btn" data-city="Никополь">
-                Никополь
-              </button>
-              <button type="button" class="city-btn" data-city="Марганец">
-                Марганец
-              </button>
-              <button type="button" class="city-btn" data-city="Покров">
-                Покров
-              </button>
-              <button type="button" class="city-btn" data-city="Каменское">
-                Каменское
-              </button>
-              <button type="button" class="city-btn" data-city="Капуловка">
-                Капуловка
-              </button>
-              <button type="button" class="city-btn" data-city="Алексеевка">
-                Алексеевка
-              </button>
-              <button
-                type="button"
-                class="city-btn"
-                data-city="Красногригорьевка"
-              >
-                Красногригорьевка
-              </button>
-              <button type="button" class="city-btn" data-city="">
-                Другой
-              </button>
-            </div>
-            <div class="city-actions">
-              <button type="button" id="city-clear" class="chip">
-                Все города
-              </button>
-            </div>
-          </details>
-
-          <!-- Тип сделки -->
-          <details class="dd">
-            <summary>Тип сделки</summary>
-            <div class="dd__panel">
-              <button class="dd__item" type="button">Купля</button>
-              <button class="dd__item" type="button">Продажа</button>
-              <button class="dd__item" type="button">Отдам</button>
-              <button class="dd__item" type="button">Возьму в дар</button>
-            </div>
-          </details>
+            <!-- Тип сделки -->
+            <details class="dd">
+              <summary>Тип сделки</summary>
+              <div class="dd__panel">
+                <button class="dd__item" type="button">Купля</button>
+                <button class="dd__item" type="button">Продажа</button>
+                <button class="dd__item" type="button">Отдам</button>
+                <button class="dd__item" type="button">Возьму в дар</button>
+              </div>
+            </details>
+          </div>
         </div>
       </header>
 
@@ -663,52 +1024,37 @@
         <aside class="sidebar" id="sidebar">
           <!-- Категория -->
           <section class="side__section" id="side-category">
-            <!--   <h3 class="side__head">Категория</h3> -->
+            <h3 class="side__head">Категория</h3>
             <ul class="side__list">
               <li>
-                <label><input type="checkbox" /> Авто-мото техника</label>
+                <label><input type="checkbox" /> Транспорт</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Квартиры</label>
+                <label><input type="checkbox" /> Жильё</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Бытовая техника</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Животные</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Продукты питания</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Одежда</label>
+                <label><input type="checkbox" /> Техника</label>
               </li>
               <li>
                 <label><input type="checkbox" /> Электроника</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Украшения</label>
+                <label><input type="checkbox" /> Стройка</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Товары для детей</label>
+                <label><input type="checkbox" /> Продукты</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Инструменты</label>
+                <label><input type="checkbox" /> Одежда</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Строительство</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Искусство</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Свадебные украшения</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Услуги</label>
+                <label><input type="checkbox" /> Животные</label>
               </li>
               <li>
                 <label><input type="checkbox" /> Прочее</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Услуги</label>
               </li>
             </ul>
           </section>
