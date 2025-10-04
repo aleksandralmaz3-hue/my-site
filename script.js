@@ -761,39 +761,3 @@ document.addEventListener("DOMContentLoaded", () => {
     setIndexUIStrings(savedLang);
   }
 });
-// Тогглер сайдбара на телефоне
-(function () {
-  const btn = document.getElementById("filtersToggle");
-  const panel = document.getElementById("filters");
-  if (!btn || !panel) return;
-
-  // создаём backdrop один раз
-  let backdrop = document.querySelector(".backdrop");
-  if (!backdrop) {
-    backdrop = document.createElement("div");
-    backdrop.className = "backdrop";
-    document.body.appendChild(backdrop);
-  }
-
-  function open() {
-    panel.classList.add("open");
-    backdrop.classList.add("show");
-    document.body.classList.add("body-lock");
-    btn.setAttribute("aria-expanded", "true");
-    panel.setAttribute("aria-hidden", "false");
-  }
-  function close() {
-    panel.classList.remove("open");
-    backdrop.classList.remove("show");
-    document.body.classList.remove("body-lock");
-    btn.setAttribute("aria-expanded", "false");
-    panel.setAttribute("aria-hidden", "true");
-  }
-  btn.addEventListener("click", () => {
-    panel.classList.contains("open") ? close() : open();
-  });
-  backdrop.addEventListener("click", close);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") close();
-  });
-})();
