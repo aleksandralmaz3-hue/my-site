@@ -936,6 +936,14 @@
           height: 14px !important;
         }
       }
+      /* >400px: чек-боксы "Категория" в один столбик */
+      @media (min-width: 401px) {
+        #side-category .side__list {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+        }
+      }
     </style>
   </head>
   <body>
