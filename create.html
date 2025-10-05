@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru" spellcheck="true">
+<html lang="uk" spellcheck="true">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="stylesheet" href="index.css" />
-    <title>Подать объявление</title>
+    <title>Подати оголошення</title>
     <style>
       body {
         font-family: sans-serif;
@@ -542,6 +542,35 @@
           border-radius: 4px;
         }
       }
+      /* === Сузить главный интерфейс до 80% === */
+      @media (min-width: 961px) {
+        .wrap {
+          width: 80% !important;
+          max-width: none !important;
+          margin: 16px auto !important; /* по центру */
+        }
+        /* шапку тоже сужаем до 80% */
+        body .bar {
+          width: 80% !important;
+          max-width: none !important;
+          margin: 16px auto !important;
+        }
+      }
+      /* === Жесткое переопределение ширины интерфейса только для create.html === */
+      @media (min-width: 961px) {
+        body > .wrap {
+          width: 70vw !important; /* именно 70% ширины окна */
+          max-width: 70vw !important; /* перекрывает max-width:1100px */
+          margin: 0 auto !important; /* центрирование */
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
+
+        body > .wrap > .bar {
+          width: 70vw !important;
+          max-width: 70vw !important; /* ломает 100% правило из index.css */
+          margin: 16px auto !important;
+        }
     </style>
   </head>
   <body>
@@ -554,28 +583,28 @@
           </div>
 
           <nav class="nav">
-            <a href="index.html" class="btn btn--sm">Лента</a>
+            <a href="index.html" class="btn btn--sm">Стрічка</a>
             <a href="admin.html" class="btn btn--sm">admin</a>
           </nav>
         </div>
       </header>
       <main class="panel">
-        <h1>Подать объявление</h1>
+        <h1>Подати оголошення</h1>
 
-        <label for="deal">Тип сделки</label>
+        <label for="deal">Тип угоди</label>
         <select id="deal" required>
-          <option value="" disabled selected hidden>Например: Куплю</option>
+          <option value="" disabled selected hidden>Наприклад: Куплю</option>
           <option value="Куплю">Куплю</option>
           <option value="Продам">Продам</option>
-          <option value="Отдам">Отдам</option>
-          <option value="Возьму в дар">Возьму в дар</option>
+          <option value="Отдам">Віддам</option>
+          <option value="Возьму в дар">Візьму в дар</option>
         </select>
 
         <!-- Услуги -->
-        <label id="services-label" for="services">Услуги</label>
+        <label id="services-label" for="services">Послуги</label>
         <input
           id="services"
-          placeholder="Например: Услуги массажиста"
+          placeholder="Наприклад: Послуги масажиста"
           autocomplete="off"
           autocorrect="on"
           autocapitalize="sentences"
@@ -583,26 +612,26 @@
         />
 
         <!-- Категория -->
-        <label for="category">Категория</label>
-        <select id="category" required>
-          <option value="" disabled selected>Например: Жильё</option>
-          <option value="Авто-мото техника">Транспорт</option>
-          <option value="Квартиры">Жильё</option>
-          <option value="Бытовая техника">Техника</option>
-          <option value="Животные">Электроника</option>
-          <option value="Продукты питания">Стройка</option>
-          <option value="Одежда">Продукты</option>
-          <option value="Электроника">Одежда</option>
-          <option value="Украшения">Животные</option>
-          <option value="Товары для детей">Прочее</option>
-          <option value="Инструменты">Услуги</option>
+        <label for="category">Категорія</label>
+        <select id="category">
+          <option value="">Оберіть категорію</option>
+          <option value="Транспорт">Транспорт</option>
+          <option value="Житло">Житло</option>
+          <option value="Техніка">Техніка</option>
+          <option value="Електроніка">Електроніка</option>
+          <option value="Будівництво">Будівництво</option>
+          <option value="Продукти">Продукти</option>
+          <option value="Одяг">Одяг</option>
+          <option value="Тварини">Тварини</option>
+          <option value="Інше">Інше</option>
+          <option value="Послуги">Послуги</option>
         </select>
 
-        <label>Вид товара</label>
-        <input id="title" placeholder="Например: Настольная лампа" />
+        <label>Вид товару</label>
+        <input id="title" placeholder="Наприклад : Настільна лампа" />
 
         <div id="priceRow">
-          <label for="price">Цена (грн)</label>
+          <label for="price">Ціна (грн)</label>
           <input
             id="price"
             type="number"
@@ -611,17 +640,17 @@
           />
         </div>
 
-        <label for="city">Город</label>
+        <label for="city">Місто</label>
         <select id="city" required>
-          <option value="" disabled selected hidden>Например: Никополь</option>
-          <option value="Никополь">Никополь</option>
+          <option value="" disabled selected hidden>Наприклад: Нікополь</option>
+          <option value="Никополь">Нікополь</option>
           <option value="Марганец">Марганец</option>
           <option value="Покров">Покров</option>
-          <option value="Каменское">Каменское</option>
-          <option value="Капуловка">Капуловка</option>
-          <option value="Алексеевка">Алексеевка</option>
-          <option value="Красногригорьевка">Красногригорьевка</option>
-          <option value="Другой">Другой</option>
+          <option value="Каменское">Камянське</option>
+          <option value="Капуловка">Капулівка</option>
+          <option value="Алексеевка">Олексіївка</option>
+          <option value="Красногригорьевка">Красногригорівка</option>
+          <option value="Другой">Інший</option>
         </select>
 
         <!-- анти-автозаполнение: Chrome «сливает» подсказки сюда -->
@@ -653,14 +682,14 @@
           spellcheck="false"
         />
 
-        <label>Описание товара</label>
+        <label>Опис товару</label>
         <textarea id="desc" rows="5"></textarea>
 
         <div class="btn-row">
           <div class="btn-left">
-            <button class="btn red" onclick="save()">Сохранить</button>
+            <button class="btn red" onclick="save()">Зберегти</button>
             <button class="btn gray" id="reset-btn" type="button">
-              Сброс условий
+              Скинути умови
             </button>
           </div>
           <div class="btn-right">
@@ -742,25 +771,25 @@
           function setUIStrings(lang) {
             const t = {
               ru: {
-                h1: "Подать объявление",
+                h1: "Подати оголошення",
                 nav_feed: "Лента",
-                deal: "Тип сделки",
-                services: "Услуги",
-                category: "Категория",
-                title: "Вид товара",
-                price: "Цена (грн)",
-                city: "Город",
+                deal: "Тип угоди",
+                services: "Послуги",
+                category: "Категорія",
+                title: "Вид товару",
+                price: "Ціна (грн)",
+                city: "Місто",
                 phone: "Телефон",
-                desc: "Описание товара",
+                desc: "Опис товару",
                 save: "Сохранить",
                 reset: "Сброс условий",
                 pay: "Оплата",
-                deal_ph: "Например: Куплю",
-                city_ph: "Например: Никополь",
-                cat_ph: "Например: Квартиры",
-                deal_opts: ["Куплю", "Продам", "Отдам", "Возьму в дар"],
-                news_title: "Новости сайта",
-                news_empty: "Пока новостей нет. Админ добавит позже.",
+                deal_ph: "Наприклад: Куплю",
+                city_ph: "Наприклад: Нікополь",
+                cat_ph: "Наприклад: Квартири",
+                deal_opts: ["Куплю", "Продам", "Віддам", "Візьму в дар"],
+                news_title: "Новини сайту",
+                news_empty: "Поки новин немає. Адмін додасть пізніше.",
               },
               uk: {
                 h1: "Подати оголошення",
@@ -1063,7 +1092,7 @@
               const emptyText =
                 lang === "uk"
                   ? "Поки новин немає. Адмін додасть пізніше."
-                  : "Пока новостей нет. Админ добавит позже.";
+                  : "Поки новин немає. Адмін додасть пізніше.";
               box.innerHTML = `<p style="opacity:.7">${emptyText}</p>`;
               return;
             }

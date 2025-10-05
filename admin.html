@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -106,19 +106,19 @@
   <body>
     <div class="admin">
       <div class="admin__top">
-        <a class="badge" href="index.html">Лента</a>
+        <a class="badge" href="index.html">Стрічка</a>
       </div>
 
-      <h1>Администратор</h1>
+      <h1>Адміністратор</h1>
 
       <form id="feedbackForm" class="form" autocomplete="off">
         <textarea
           id="feedbackText"
-          placeholder="Напишите сообщение админу..."
+          placeholder="Напишіть повідомлення адміну..."
         ></textarea>
         <div class="form-buttons">
-          <button type="submit">Отправить</button>
-          <button type="button" id="btnClear">Очистить</button>
+          <button type="submit">Надіслати</button>
+          <button type="button" id="btnClear">Очистити</button>
         </div>
       </form>
 
@@ -196,7 +196,7 @@
         <div class="item__text">${esc(m.text)}</div>
         <button class="item__btn" type="button" onclick="deleteForever(${
           m.id
-        })">Удалить навсегда</button>
+        })">Видалити назавжди</button>
       </div>
     `
           )

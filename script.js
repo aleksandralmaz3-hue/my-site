@@ -283,7 +283,7 @@ function applyFilters() {
       const city = (btn.getAttribute("data-city") || "").trim();
       state.city = city;
       setActive(btn);
-      summary.textContent = city || "Город";
+      summary.textContent = city || "Місто";
       applyFilters();
       dd.removeAttribute("open");
     });
@@ -292,7 +292,7 @@ function applyFilters() {
   btnClear?.addEventListener("click", () => {
     state.city = "";
     setActive(null);
-    summary.textContent = "Город";
+    summary.textContent = "Місто";
     applyFilters();
     dd.removeAttribute("open");
   });
@@ -343,9 +343,9 @@ function applyFilters() {
   topDD.forEach((dd) => {
     const title = dd.querySelector("summary")?.textContent.trim();
     let type = null;
-    if (title === "Город") type = "city";
+    if (title === "Місто") type = "city";
     if (title === "Все категории") type = "category";
-    if (title === "Тип сделки") type = "deal";
+    if (title === "Тип угоди") type = "deal";
     if (!type) return;
     dd.addEventListener("toggle", () => dd.open && setSidebarMode(type));
   });
@@ -412,7 +412,7 @@ function applyFilters() {
     : [];
 
   const ddCat = findTop("Все категории");
-  const ddDeal = findTop("Тип сделки");
+  const ddDeal = findTop("Тип угоди");
 
   // Top ► Sidebar
   if (ddCat) {
@@ -440,7 +440,7 @@ function applyFilters() {
           const txt = (b.closest("label")?.textContent || "").trim();
           b.checked = txt === name;
         });
-        setSummaryText(ddDeal, name, "Тип сделки");
+        setSummaryText(ddDeal, name, "Тип угоди");
         applyFilters();
         ddDeal.removeAttribute("open");
       });
@@ -457,7 +457,7 @@ function applyFilters() {
     if (ddDeal) {
       const d = dealBoxes.find((b) => b.checked);
       const label = d ? (d.closest("label")?.textContent || "").trim() : "";
-      setSummaryText(ddDeal, label, "Тип сделки");
+      setSummaryText(ddDeal, label, "Тип угоди");
     }
   };
   catBoxes.forEach((b) => b.addEventListener("change", syncFromSidebar));
@@ -475,7 +475,7 @@ function applyFilters() {
   chipsRoot?.querySelectorAll("[data-city]")?.forEach((btn) => {
     btn.addEventListener("click", () => {
       state.city = (btn.getAttribute("data-city") || "").trim();
-      if (topSummary) topSummary.textContent = state.city || "Город";
+      if (topSummary) topSummary.textContent = state.city || "Місто";
       applyFilters();
     });
   });
@@ -495,7 +495,7 @@ function applyFilters() {
         } else {
           state.city = "";
         }
-        if (topSummary) topSummary.textContent = state.city || "Город";
+        if (topSummary) topSummary.textContent = state.city || "Місто";
         applyFilters();
       });
     });
@@ -520,7 +520,7 @@ function applyFilters() {
   const setSidebarContext = (label) => {
     label = (label || "").trim();
     // Город (верх): в сайдбаре показываем "Все категории" + "Тип сделки"
-    if (label === "Город") {
+    if (label === "Місто") {
       showOnly(sideCategory, sideDeal);
       return;
     }
@@ -530,12 +530,12 @@ function applyFilters() {
       return;
     }
     // Тип сделки (верх): в сайдбаре "Город" (чекбоксы) + "Все категории"
-    if (label === "Тип сделки") {
+    if (label === "Тип угоди") {
       showOnly(sideCityList, sideCategory); // скрываем чипы города
       return;
     }
     // По номеру телефона (верх): по умолчанию "Город" (чекбоксы) + "Все категории" + "Тип сделки"
-    if (label === "По номеру телефона") {
+    if (label === "За номером телефону") {
       showOnly(sideCityList, sideCategory, sideDeal);
       return;
     }
@@ -550,7 +550,7 @@ function applyFilters() {
   });
 
   // Инициализация (состояние по умолчанию — все закрыты, включим полный набор)
-  setSidebarContext("По номеру телефона");
+  setSidebarContext("За номером телефону");
 })();
 
 // === КНОПКА "ЛЕНТА": безопасный сброс ===
@@ -619,12 +619,12 @@ function resetFeedState() {
 
   // 4) Вернуть подписи в summary
   const citySummary = document.getElementById("city-summary");
-  if (citySummary) citySummary.textContent = "Город";
+  if (citySummary) citySummary.textContent = "Місто";
   document.querySelectorAll(".filters details.dd > summary").forEach((s) => {
     const t = s.textContent.trim();
     if (t.includes("Катег")) s.textContent = "Все категории";
-    if (t.includes("Тип сделки")) s.textContent = "Тип сделки";
-    if (t.includes("телефона")) s.textContent = "По номеру телефона";
+    if (t.includes("Тип угоди")) s.textContent = "Тип угоди";
+    if (t.includes("телефона")) s.textContent = "За номером телефону";
   });
 
   // 5) Снять ВСЕ галки в левом сайдбаре
@@ -694,15 +694,15 @@ function setIndexUIStrings(lang) {
   const t = {
     ru: {
       brand: "Продай-ка!",
-      feed: "Лента",
-      create: "Подать объявление",
-      phoneSearch: "По номеру телефона",
-      city: "Город",
-      deal: "Тип сделки",
+      feed: "Стрічка",
+      create: "Подати оголошення",
+      phoneSearch: "За номером телефону",
+      city: "Місто",
+      deal: "Тип угоди",
       find: "Найти",
       reset: "Сброс",
       allCities: "Все города",
-      category: "Категория",
+      category: "Категорія",
       services: "Услуги",
       createPay: "Оплата",
       createPaid: "Оплачено",
@@ -736,7 +736,7 @@ function setIndexUIStrings(lang) {
   // ВАЖНО: меняем только summary «Тип сделки», а не первый попавшийся summary
   document.querySelectorAll(".filters details.dd > summary").forEach((s) => {
     const txt = (s.textContent || "").trim();
-    if (txt === "Тип сделки" || txt === "Тип угоди") {
+    if (txt === "Тип угоди" || txt === "Тип угоди") {
       s.replaceChildren(t.deal);
     }
   });
