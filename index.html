@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -330,12 +330,14 @@
 
       /* Заголовки и списки в сайдбаре (визуал как на скрине) */
       .side__section {
-        background: #e5e7eb;
-        border: 1px solid #d1d5db;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
         border-radius: 10px;
         padding: 10px;
         margin-bottom: 10px;
       }
+
       .side__head {
         margin: 0 0 8px;
         font-size: 14px;
@@ -943,6 +945,38 @@
           flex-direction: column !important;
           gap: 6px !important;
         }
+      } /* === 375–667px: скрыть кнопку "По номеру телефона" === */
+      @media (min-width: 340px) and (max-width: 667px) {
+        #phone-dd {
+          display: none !important;
+          visibility: hidden !important;
+        }
+      }
+      /* === Восстановление обычной выпадашки "Город" === */
+      #city-dd {
+        position: static !important;
+        overflow: visible !important;
+        z-index: auto !important;
+      }
+
+      #city-dd[open] > .dd__panel {
+        position: static !important;
+        top: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+        box-shadow: none !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 8px !important;
+        background: #fff !important;
+        margin-top: 4px !important;
+        padding: 6px !important;
+        z-index: auto !important;
+      }
+      /* === Убрать внешние отступы у блока с чек-боксами === */
+      #side-category,
+      .sidebar,
+      .side__section {
+        margin: 0 !important;
       }
     </style>
   </head>
@@ -956,7 +990,7 @@
             <span>Продай-ка!</span>
           </a>
           <nav class="nav">
-            <button type="button" id="feed-reset" class="chip">Стрічка</button>
+            <button type="button" id="feed-reset" class="chip">Лента</button>
             <a class="btn" href="create.html">Подати оголошення</a>
           </nav>
         </div>
@@ -965,7 +999,7 @@
         <div class="filters">
           <!-- ПО НОМЕРУ ТЕЛЕФОНА -->
           <details class="dd" id="phone-dd">
-            <summary class="chip">За номером телефону</summary>
+            <summary class="chip">По номеру телефона</summary>
             <div class="dd__panel">
               <form id="phone-form" class="phone-form" onsubmit="return false;">
                 <input
@@ -980,25 +1014,24 @@
                 />
 
                 <button type="button" id="phone-search" class="chip">
-                  Знайти
+                  Найти
                 </button>
                 <button type="button" id="phone-clear" class="chip">
-                  Скинути
+                  Сброс
                 </button>
               </form>
               <small class="muted"
-                >Введіть від 5 цифр (можна частково, без пробілів і
-                дужок)..</small
+                >Введи от 5 цифр (можно частично, без пробелов и скобок).</small
               >
             </div>
           </details>
           <div class="title">
             <!-- Город -->
             <details class="dd" id="city-dd">
-              <summary id="city-summary">Місто</summary>
+              <summary id="city-summary">Город</summary>
               <div class="dd__panel city-grid">
                 <button type="button" class="city-btn" data-city="Никополь">
-                  Нікополь
+                  Никополь
                 </button>
                 <button type="button" class="city-btn" data-city="Марганец">
                   Марганец
@@ -1007,40 +1040,40 @@
                   Покров
                 </button>
                 <button type="button" class="city-btn" data-city="Каменское">
-                  Камянське
+                  Каменское
                 </button>
                 <button type="button" class="city-btn" data-city="Капуловка">
-                  Капулівка
+                  Капуловка
                 </button>
                 <button type="button" class="city-btn" data-city="Алексеевка">
-                  Олексіївка
+                  Алексеевка
                 </button>
                 <button
                   type="button"
                   class="city-btn"
                   data-city="Красногригорьевка"
                 >
-                  Красногригорівка
+                  Красногригорьевка
                 </button>
                 <button type="button" class="city-btn" data-city="">
-                  Інший
+                  Другой
                 </button>
               </div>
               <div class="city-actions">
                 <button type="button" id="city-clear" class="chip">
-                  Усі міста
+                  Все города
                 </button>
               </div>
             </details>
 
             <!-- Тип сделки -->
             <details class="dd">
-              <summary>Тип угоди</summary>
+              <summary>Тип сделки</summary>
               <div class="dd__panel">
-                <button class="dd__item" type="button">Купівля</button>
+                <button class="dd__item" type="button">Купля</button>
                 <button class="dd__item" type="button">Продажа</button>
-                <button class="dd__item" type="button">Віддам</button>
-                <button class="dd__item" type="button">Візьму в дар</button>
+                <button class="dd__item" type="button">Отдам</button>
+                <button class="dd__item" type="button">Возьму в дар</button>
               </div>
             </details>
           </div>
@@ -1051,37 +1084,36 @@
         <aside class="sidebar" id="sidebar">
           <!-- Категория -->
           <section class="side__section" id="side-category">
-            <h3 class="side__head">Категорія</h3>
             <ul class="side__list">
               <li>
                 <label><input type="checkbox" /> Транспорт</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Житло</label>
+                <label><input type="checkbox" /> Жильё</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Техніка</label>
+                <label><input type="checkbox" /> Техника</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Єлектроніка</label>
+                <label><input type="checkbox" /> Электроника</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Бубівництво</label>
+                <label><input type="checkbox" /> Стройка</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Продукти</label>
+                <label><input type="checkbox" /> Продукты</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Одяг</label>
+                <label><input type="checkbox" /> Одежда</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Тварини</label>
+                <label><input type="checkbox" /> Животные</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Інше</label>
+                <label><input type="checkbox" /> Прочее</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Послуги</label>
+                <label><input type="checkbox" /> Услуги</label>
               </li>
             </ul>
           </section>

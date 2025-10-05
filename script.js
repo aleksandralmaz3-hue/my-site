@@ -343,9 +343,9 @@ function applyFilters() {
   topDD.forEach((dd) => {
     const title = dd.querySelector("summary")?.textContent.trim();
     let type = null;
-    if (title === "Місто") type = "city";
+    if (title === "Город") type = "city";
     if (title === "Все категории") type = "category";
-    if (title === "Тип угоди") type = "deal";
+    if (title === "Тип сделки") type = "deal";
     if (!type) return;
     dd.addEventListener("toggle", () => dd.open && setSidebarMode(type));
   });
@@ -412,7 +412,7 @@ function applyFilters() {
     : [];
 
   const ddCat = findTop("Все категории");
-  const ddDeal = findTop("Тип угоди");
+  const ddDeal = findTop("Тип сделки");
 
   // Top ► Sidebar
   if (ddCat) {
@@ -440,7 +440,7 @@ function applyFilters() {
           const txt = (b.closest("label")?.textContent || "").trim();
           b.checked = txt === name;
         });
-        setSummaryText(ddDeal, name, "Тип угоди");
+        setSummaryText(ddDeal, name, "Тип сделки");
         applyFilters();
         ddDeal.removeAttribute("open");
       });
@@ -457,7 +457,7 @@ function applyFilters() {
     if (ddDeal) {
       const d = dealBoxes.find((b) => b.checked);
       const label = d ? (d.closest("label")?.textContent || "").trim() : "";
-      setSummaryText(ddDeal, label, "Тип угоди");
+      setSummaryText(ddDeal, label, "Тип сделки");
     }
   };
   catBoxes.forEach((b) => b.addEventListener("change", syncFromSidebar));
@@ -520,7 +520,7 @@ function applyFilters() {
   const setSidebarContext = (label) => {
     label = (label || "").trim();
     // Город (верх): в сайдбаре показываем "Все категории" + "Тип сделки"
-    if (label === "Місто") {
+    if (label === "Город") {
       showOnly(sideCategory, sideDeal);
       return;
     }
@@ -530,12 +530,12 @@ function applyFilters() {
       return;
     }
     // Тип сделки (верх): в сайдбаре "Город" (чекбоксы) + "Все категории"
-    if (label === "Тип угоди") {
+    if (label === "Тип сделки") {
       showOnly(sideCityList, sideCategory); // скрываем чипы города
       return;
     }
     // По номеру телефона (верх): по умолчанию "Город" (чекбоксы) + "Все категории" + "Тип сделки"
-    if (label === "За номером телефону") {
+    if (label === "По номеру телефона") {
       showOnly(sideCityList, sideCategory, sideDeal);
       return;
     }
@@ -550,7 +550,7 @@ function applyFilters() {
   });
 
   // Инициализация (состояние по умолчанию — все закрыты, включим полный набор)
-  setSidebarContext("За номером телефону");
+  setSidebarContext("По номеру телефона");
 })();
 
 // === КНОПКА "ЛЕНТА": безопасный сброс ===
@@ -619,11 +619,11 @@ function resetFeedState() {
 
   // 4) Вернуть подписи в summary
   const citySummary = document.getElementById("city-summary");
-  if (citySummary) citySummary.textContent = "Місто";
+  if (citySummary) citySummary.textContent = "Город";
   document.querySelectorAll(".filters details.dd > summary").forEach((s) => {
     const t = s.textContent.trim();
     if (t.includes("Катег")) s.textContent = "Все категории";
-    if (t.includes("Тип угоди")) s.textContent = "Тип угоди";
+    if (t.includes("Тип сделки")) s.textContent = "Тип угоди";
     if (t.includes("телефона")) s.textContent = "За номером телефону";
   });
 
@@ -702,7 +702,7 @@ function setIndexUIStrings(lang) {
       find: "Найти",
       reset: "Сброс",
       allCities: "Все города",
-      category: "Категорія",
+      category: "Категория",
       services: "Услуги",
       createPay: "Оплата",
       createPaid: "Оплачено",
@@ -736,7 +736,7 @@ function setIndexUIStrings(lang) {
   // ВАЖНО: меняем только summary «Тип сделки», а не первый попавшийся summary
   document.querySelectorAll(".filters details.dd > summary").forEach((s) => {
     const txt = (s.textContent || "").trim();
-    if (txt === "Тип угоди" || txt === "Тип угоди") {
+    if (txt === "Тип сделки" || txt === "Тип угоди") {
       s.replaceChildren(t.deal);
     }
   });
