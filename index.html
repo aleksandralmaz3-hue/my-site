@@ -978,6 +978,28 @@
       .side__section {
         margin: 0 !important;
       }
+      /* === 280–400px: чек-боксы в два столбца и уменьшенный шрифт === */
+      @media (min-width: 278px) and (max-width: 400px) {
+        #side-category .side__list {
+          display: grid !important;
+          grid-template-columns: 1fr 1fr !important; /* два столбца */
+          gap: 6px !important;
+        }
+
+        #side-category .side__list label {
+          display: grid !important;
+          grid-template-columns: 16px 1fr !important; /* квадрат + текст */
+          align-items: center !important;
+          column-gap: 6px !important;
+          font-size: 13px !important; /* уменьшенный шрифт */
+          line-height: 1.1 !important;
+        }
+
+        #side-category .side__list input[type="checkbox"] {
+          width: 14px !important;
+          height: 14px !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1095,10 +1117,7 @@
                 <label><input type="checkbox" /> Техника</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Электроника</label>
-              </li>
-              <li>
-                <label><input type="checkbox" /> Стройка</label>
+                <label><input type="checkbox" /> Животные</label>
               </li>
               <li>
                 <label><input type="checkbox" /> Продукты</label>
@@ -1107,7 +1126,16 @@
                 <label><input type="checkbox" /> Одежда</label>
               </li>
               <li>
-                <label><input type="checkbox" /> Животные</label>
+                <label><input type="checkbox" /> Электроника</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Украшения</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Для детей</label>
+              </li>
+              <li>
+                <label><input type="checkbox" /> Инструменты</label>
               </li>
               <li>
                 <label><input type="checkbox" /> Прочее</label>
