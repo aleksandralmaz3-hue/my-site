@@ -1,4 +1,5 @@
-const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
+const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/";
+
 
 async function loadAds(params = {}) {
   const url = new URL(API + "/ads");
