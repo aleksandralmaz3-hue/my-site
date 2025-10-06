@@ -1153,20 +1153,14 @@
       </div>
 
       <!-- Боковая панель -->
-   
-      id="apiStatus"
-      style="text-align: right; font-size: 12px; opacity: 0.85"
-    ></div>
-    <script>
-      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io"; // если у тебя другой порт — подправь
 
+      id="apiStatus" style="text-align: right; font-size: 12px; opacity: 0.85" >
+    </div>
+    <script>
+      const API_STATUS = "https://68e3a1098e14f4523dae1d54.mockapi.io";
       async function apiStatus() {
-        try {
-          const r = await fetch(API + "/ads", { cache: "no-store" });
-          return r.ok;
-        } catch {
-          return false;
-        }
+        const r = await fetch(API_STATUS + "/ads", { cache: "no-store" });
+        return r.ok;
       }
       function showApiStatus(elId = "apiStatus") {
         const el = document.getElementById(elId);
@@ -1178,10 +1172,8 @@
       }
       document.addEventListener("DOMContentLoaded", () => showApiStatus());
     </script>
-    <script src="js/ads-api.js" defer></script>
-<script src="./script.js?v=2" defer></script>
 
+    <script src="js/ads-api.js" defer></script>
+    <script src="./script.js?v=2" defer></script>
   </body>
 </html>
-
-
