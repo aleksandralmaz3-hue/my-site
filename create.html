@@ -591,7 +591,7 @@
       </header>
       <main class="panel">
         <h1>Подать объявление</h1>
-
+        <form id="createForm"></form>
         <label for="deal">Тип сделки</label>
         <select id="deal" required>
           <option value="" disabled selected hidden>Например: Куплю</option>
@@ -712,7 +712,7 @@
             <button class="btn green" type="button">Оплачено</button>
           </div>
         </div>
-
+</form>
         <script>
           let SERVICE_MODE = false; // режим "Услуги"
           const cleanPhone = (s) => s.replace(/[^\d+]/g, "");
@@ -744,9 +744,9 @@
                 createdAt: Date.now(), // ← ДОБАВИЛА
               };
               const key = "ads";
-              const ads = JSON.parse(localStorage.getItem(key) || "[]");
+              
               ads.unshift(ad);
-              localStorage.setItem(key, JSON.stringify(ads));
+              
               tryPostAd(ad); // ← ДОБАВИЛА ЗДЕСЬ
               location.href = "index.html";
               return;
@@ -770,9 +770,9 @@
               createdAt: Date.now(),
             };
             const key = "ads";
-            const ads = JSON.parse(localStorage.getItem(key) || "[]");
+            
             ads.unshift(ad);
-            localStorage.setItem(key, JSON.stringify(ads));
+         
             tryPostAd(ad);
             location.href = "index.html";
           }
@@ -919,11 +919,11 @@
             if (flag) flag.textContent = lang === "uk" ? "ua" : "ru";
 
             // Сохраняем выбор
-            localStorage.setItem("inputLang", lang);
+            
           }
 
           function toggleInputLanguage() {
-            const current = localStorage.getItem(INPUT_LANG_KEY) || "ru";
+           
             const next = current === "ru" ? "uk" : "ru";
             applyInputLanguage(next);
           }
@@ -931,7 +931,7 @@
           // Инициализация и переключение режимов
           document.addEventListener("DOMContentLoaded", () => {
             // Инициализация языка ввода
-            const savedLang = localStorage.getItem(INPUT_LANG_KEY) || "ru";
+           
             applyInputLanguage(savedLang);
 
             // Клик по кнопке RU ⇄ UA
@@ -1096,7 +1096,7 @@
 
             let items = [];
             try {
-              items = JSON.parse(localStorage.getItem(NEWS_KEY) || "[]");
+           
             } catch (e) {
               items = [];
             }
@@ -1139,25 +1139,23 @@
     </div>
 
     <script>
-      const API = "http://localhost:3000"; // если json-server на другом порту — подправь
+   const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/:endpoint";
 
-      function tryPostAd(ad) {
-        fetch(API + "/ads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(ad),
-        }).catch(() => {}); // не ломает UX, если API OFFLINE
-      }
+function tryPostAd(ad) {
+  fetch(API + "/listings", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(ad),
+  }).catch(() => {});
+}
 
-      // Индикатор статуса API (по желанию)
-      async function apiStatus() {
-        try {
-          const r = await fetch(API + "/ads", { cache: "no-store" });
-          return r.ok;
-        } catch {
-          return false;
-        }
-      }
+async function apiStatus() {
+  try {
+    const r = await fetch(API + "/listings", { cache: "no-store" });
+    return r.ok;
+  } catch { return false; }
+}
+
       document.addEventListener("DOMContentLoaded", () =>
         apiStatus().then((ok) => {
           const el = document.getElementById("apiStatus");
@@ -1167,5 +1165,34 @@
         })
       );
     </script>
+    <script src="js/ads-api.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createForm');
+  if (!form) return;
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const ad = {
+      title: title.value.trim(),
+      description: description.value.trim(),
+      price: price.value || null,
+      city: city.value.trim(),
+      phone: phone.value.trim(),
+      category: category.value.trim(),
+      deal: deal.value.trim(),
+      createdAt: new Date().toISOString(),
+    };
+    try {
+      await ADS_API.createAd(ad);           // ← только сюда
+      location.href = 'index.html';
+    } catch (err) {
+      console.error(err);
+      alert('Помилка публікації');
+    }
+  });
+});
+</script>
+
   </body>
 </html>

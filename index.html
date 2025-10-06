@@ -1160,25 +1160,34 @@
       style="text-align: right; font-size: 12px; opacity: 0.85"
     ></div>
     <script>
-      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
-
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/:endpoint";
       async function apiStatus() {
         try {
-          const r = await fetch(API + "/ads", { cache: "no-store" });
+          const r = await fetch(API + "/listings", { cache: "no-store" });
           return r.ok;
         } catch {
           return false;
         }
       }
-      function showApiStatus(elId = "apiStatus") {
-        const el = document.getElementById(elId);
-        if (!el) return;
-        apiStatus().then((ok) => {
-          el.textContent = ok ? "API: OK" : "API: OFFLINE";
-          el.style.color = ok ? "#16a34a" : "#ef4444";
-        });
-      }
       document.addEventListener("DOMContentLoaded", () => showApiStatus());
+    </script>
+
+    <!-- Подключаем API -->
+    <script src="js/ads-api.js"></script>
+
+    <!-- Грузим ленту ТОЛЬКО из MockAPI -->
+    <script>
+      async function initFeed() {
+        try {
+          const ads = await ADS_API.loadAds(); // GET https://…/ads
+          window.__ADS = ads; // временно, для отладки
+          renderAds(ads); // твоя функция
+        } catch (e) {
+          console.error("Load from MockAPI failed", e);
+          renderAds([]); // пусто, если не загрузилось
+        }
+      }
+      document.addEventListener("DOMContentLoaded", initFeed);
     </script>
   </body>
 </html>

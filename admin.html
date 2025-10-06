@@ -126,7 +126,7 @@
     </div>
     <script>
       // ===== Настройки API (тестовый json-server) =====
-      const API = "http://localhost:3000";
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/listings";
 
       // ===== DOM =====
       const form = document.getElementById("feedbackForm");
@@ -153,17 +153,6 @@
               "'": "&#39;",
             }[c])
         );
-
-      const readLocal = () => {
-        try {
-          const raw = JSON.parse(localStorage.getItem("feedback") || "[]");
-          return Array.isArray(raw) ? raw : [];
-        } catch {
-          return [];
-        }
-      };
-      const writeLocal = (arr) =>
-        localStorage.setItem("feedback", JSON.stringify(arr));
 
       // ===== API (мягко, офлайн-устойчиво) =====
       async function postFeedbackToAPI(msg) {
@@ -253,7 +242,7 @@
           };
 
           // отправляем POST-запрос на сервер
-          await fetch("http://localhost:3000/feedback", {
+          await fetch("https://68e3a1098e14f4523dae1d54.mockapi.io/listings", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
