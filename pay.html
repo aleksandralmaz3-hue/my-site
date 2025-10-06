@@ -341,13 +341,14 @@
     <script>
       // Фиксируем факт оплаты
       document.getElementById("paidBtn")?.addEventListener("click", () => {
+        localStorage.setItem("payment_ok", "1");
         alert("Оплата подтверждена. Можно вернуться к объявлению.");
       });
     </script>
     <script src="script.js"></script>
 
     <script>
-      // если у тебя другой порт — подправь
+      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
 
       async function apiStatus() {
         try {

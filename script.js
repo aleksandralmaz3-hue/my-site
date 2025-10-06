@@ -70,9 +70,10 @@ function ensureEmptyStub() {
 
   const now = Date.now();
   const key = "ads";
+  const raw = JSON.parse(localStorage.getItem(key) || "[]");
 
   const valid = [];
-  let dirty = false; //
+  let dirty = false; // ← будем знать, что нужно перезаписать localStorage
 
   for (const ad of raw) {
     if (!ad) continue;
@@ -94,6 +95,10 @@ function ensureEmptyStub() {
     } else {
       dirty = true; // просроченное — тоже повод переписать
     }
+  }
+
+  if (dirty) {
+    localStorage.setItem(key, JSON.stringify(valid));
   }
 
   if (valid.length === 0) {
@@ -679,7 +684,7 @@ function setPayUIStrings(lang) {
 document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector("body .pay")) {
     // проверка: мы на pay.html
-
+    const savedLang = localStorage.getItem("inputLang") || "ru";
     setPayUIStrings(savedLang);
   }
 });
@@ -752,7 +757,7 @@ function setIndexUIStrings(lang) {
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("list")) {
     // проверка: мы на index.html
-
+    const savedLang = localStorage.getItem("inputLang") || "ru";
     setIndexUIStrings(savedLang);
   }
 });
