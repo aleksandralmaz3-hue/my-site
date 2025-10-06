@@ -912,6 +912,69 @@
         padding: 8px !important;
         z-index: 4000 !important;
       }
+      /* === 280px: уменьшенная шапка === */
+      @media (max-width: 350px) {
+        .bar {
+          padding: 4px 6px !important;
+          border-radius: 8px !important;
+        }
+
+        .bar__row {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 1px !important;
+        }
+
+        .brand {
+          font-size: 13px !important;
+          gap: 1px !important;
+        }
+
+        .brand__logo {
+          font-size: 16px !important;
+        }
+
+        .nav {
+          flex-direction: column !important;
+          gap: 1px !important;
+        }
+
+        .nav .chip {
+          display: inline-block;
+
+          margin: 0px 0px 0px -190px !important;
+          padding: 3px 6px !important;
+          font-size: 12px !important;
+          border-radius: 6px !important;
+          z-index: 1000 !important;
+        }
+
+        .nav .btn {
+          display: inline-block;
+          margin: -25px 0px 0px 100px !important;
+
+          padding: 4px 6px !important;
+          font-size: 12px !important;
+          border-radius: 6px !important;
+          z-index: 2000 !important;
+        }
+
+        .filters .dd > summary {
+          margin: 0px 0px 0px 0px !important;
+
+          font-size: 12px !important;
+          padding: 1px 8px !important;
+          min-height: 20px !important;
+        }
+
+        .filters .dd {
+          padding: 0px !important;
+        }
+
+        .filters {
+          gap: 0px !important;
+        }
+      }
     </style>
   </head>
   <body>
