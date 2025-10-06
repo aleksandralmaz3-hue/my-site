@@ -620,13 +620,15 @@
           <option value="Авто-мото техника">Транспорт</option>
           <option value="Квартиры">Жильё</option>
           <option value="Бытовая техника">Техника</option>
-          <option value="Животные">Электроника</option>
-          <option value="Продукты питания">Стройка</option>
-          <option value="Одежда">Продукты</option>
-          <option value="Электроника">Одежда</option>
-          <option value="Украшения">Животные</option>
-          <option value="Товары для детей">Прочее</option>
-          <option value="Инструменты">Услуги</option>
+          <option value="Животные">Животные</option>
+          <option value="Продукты питания">Продукты</option>
+          <option value="Одежда">Одежда</option>
+          <option value="Электроника">Электроника</option>
+          <option value="Украшения">Украшения</option>
+          <option value="Товары для детей">Для детей</option>
+          <option value="Инструменты">Инструменты</option>
+          <option value="Прочее">Прочее</option>
+          <option value="Услуги">Услуги</option>
         </select>
 
         <label>Вид товара</label>
@@ -800,8 +802,8 @@
                 city_ph: "Наприклад: Нікополь",
                 cat_ph: "Например: Квартири",
                 deal_opts: ["Куплю", "Продам", "Отдам", "Возьму в дар"],
-                news_title: "Новости сайта",
-                news_empty: "Пока новостей нет. Админ добавит позже.",
+                news_title: "Новини сайту",
+                news_empty: "Поки новин немає. Адмін додасть пізніше.",
               },
               uk: {
                 h1: "Подати оголошення",
@@ -1104,7 +1106,7 @@
               const emptyText =
                 lang === "uk"
                   ? "Поки новин немає. Адмін додасть пізніше."
-                  : "Пока новостей нет. Админ добавит позже.";
+                  : "Поки новин немає. Адмін додасть пізніше.";
               box.innerHTML = `<p style="opacity:.7">${emptyText}</p>`;
               return;
             }
