@@ -89,24 +89,6 @@
         background: #f9fafb;
       }
 
-      /* ===== Блок фильтров ===== */
-      .filters {
-        margin-top: 4px;
-        display: grid;
-        gap: 10px;
-        grid-template-columns: 1fr;
-      }
-      @media (min-width: 640px) {
-        .filters {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      @media (min-width: 960px) {
-        .filters {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
       /* Выпадашка на <details> */
       .dd {
         border: 1px solid #d1d5db;
@@ -197,9 +179,6 @@
         background: #fff;
       }
 
-      .filters {
-        align-items: flex-start;
-      }
       /* ====== АДАПТИВ ДЛЯ ОСНОВЫ (ПК/ноут/планшет/телефон) ====== */
 
       /* Бейзлайн (телефон, ≤480–640px) */
@@ -259,17 +238,6 @@
         padding: 0 8px 8px;
       }
 
-      /* Карточки объявлений — сетка и отступы */
-      .cards {
-        display: grid;
-        gap: 8px;
-      }
-      @media (min-width: 480px) {
-        .cards {
-          gap: 10px;
-        }
-      }
-
       /* Планшет (≥640px) — две колонки: узкий сайдбар + контент */
       @media (min-width: 640px) {
         .main {
@@ -287,45 +255,6 @@
         .city-grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
-      }
-
-      /* Ноутбук (≥960px) — шире сайдбар, дыхание у карточек */
-      @media (min-width: 960px) {
-        .wrap {
-          max-width: 1100px;
-        } /* уже есть, оставляем как есть */
-        .main {
-          grid-template-columns: 260px 1fr;
-          gap: 14px;
-        }
-        .cards {
-          gap: 12px;
-        }
-        .city-grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-      }
-
-      /* ПК/широкие (≥1200px) — комфортные поля и сетка карточек плотнее */
-      @media (min-width: 1200px) {
-        .wrap {
-          max-width: 1240px;
-        }
-        .main {
-          grid-template-columns: 280px 1fr;
-        }
-        .cards {
-          gap: 14px;
-        }
-      }
-
-      /* Вид карточки (если список собирает script.js — задаём «пилюлю» как на макете) */
-      .cards > * {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 10px 12px;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
       }
 
       /* Заголовки и списки в сайдбаре (визуал как на скрине) */
@@ -510,36 +439,7 @@
         padding: 0px;
         margin: 0px;
       }
-      /* 340px: фикс выпадашки "Город" — открывается прямо под кнопкой */
-      @media (max-width: 340px) {
-        /* сброс любых прежних смещений */
-        #city-dd,
-        .filters details.dd:nth-of-type(3) {
-          top: auto !important;
-        }
 
-        #city-dd {
-          position: relative !important;
-          overflow: visible !important;
-          z-index: 4000 !important;
-        }
-        #city-dd > .dd__panel {
-          position: absolute !important;
-          top: calc(100% + 4px) !important;
-          left: 0 !important;
-          right: 0 !important;
-          margin: 0 !important;
-          display: grid !important;
-          padding: 8px !important;
-          background: #fff !important;
-          border: 1px solid #d1d5db !important;
-          border-radius: 10px !important;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14) !important;
-          max-height: 55vh !important;
-          overflow: auto !important;
-          z-index: 4001 !important;
-        }
-      }
       /* === 340px: убрать светлую рамку у блока "Категория" === */
       @media (max-width: 340px) {
         #sidebar,
@@ -573,35 +473,7 @@
           padding: 2px 0 !important;
         }
       }
-      /* === Уменьшение шрифта объявлений (текст остаётся жирным) === */
-      @media (max-width: 340px) {
-        .cards .card p,
-        .ad-text {
-          font-size: 13px !important;
-          font-weight: 600 !important;
-          line-height: 1.2 !important;
-        }
-      }
-      /* === Уменьшить шрифт текста объявлений на один пункт (жирность оставить) === */
-      @media (max-width: 340px) {
-        .ad-text,
-        .card__title,
-        .cards .card p {
-          font-size: 15px !important; /* было ~16px → минус один пункт */
-          font-weight: 500 !important; /* жирность сохраняем */
-          line-height: 1.2 !important;
-          margin: 0 !important;
-        }
-      }
-      /* === Нижнее описание: курсив и подчёркивание === */
-      @media (max-width: 340px) {
-        .card__desc,
-        .ad-text:last-child,
-        .cards .card p:last-child {
-          font-style: italic !important;
-          text-decoration: underline !important;
-        }
-      }
+
       .ad-expire {
         position: relative;
         z-index: 1000 !important; /* поднимаем поверх других слоёв */
@@ -754,59 +626,7 @@
         overflow-y: auto !important;
         padding-right: 10px !important; /* чтобы скролл не накрыв*/
       }
-      /* >640px: уменьшенные и выровненные в ряд фильтры */
-      @media (min-width: 641px) {
-        .filters {
-          display: grid !important;
-          grid-template-columns: repeat(
-            3,
-            1fr
-          ) !important; /* три равных блока */
-          gap: 8px !important;
-          align-items: center !important;
-        }
 
-        .title {
-          display: contents !important; /* расплющиваем обёртку */
-        }
-
-        .filters .dd {
-          padding: 2px !important;
-          border-radius: 6px !important;
-        }
-
-        .filters .dd > summary {
-          min-height: 32px !important;
-          padding: 4px 6px !important;
-          font-size: 13px !important; /* чуть меньше текста */
-          font-weight: 500 !important;
-        }
-
-        .filters .dd + .dd {
-          margin-top: 0 !important;
-        }
-      }
-      /* >640px: выравнивание фильтров по одной линии */
-      @media (min-width: 641px) {
-        .filters {
-          display: grid !important;
-          grid-template-columns: repeat(3, 1fr) !important;
-          gap: 8px !important;
-          align-items: center !important; /* все на один уровень */
-        }
-
-        .title {
-          display: contents !important; /* расплющиваем обёртку */
-        }
-
-        /* снимаем вертикальные смещения */
-        .filters .dd,
-        .filters .dd + .dd {
-          margin-top: 0 !important;
-          transform: translateY(0) !important;
-          vertical-align: middle !important;
-        }
-      }
       /* === STABILIZER: строгие диапазоны без пересечений === */
 
       /* ≤340px — всё в одну колонку, сайдбар сверху, ничего не выпадает */
@@ -1044,48 +864,7 @@
           gap: 0px !important;
         }
       }
-      /* === 280px: компактные карточки объявлений === */
-      @media (max-width: 280px) {
-        .cards > * {
-          /*  background-color: #2563eb; */
-          padding: 1px 8px !important;
-          border-radius: 8px !important;
-          font-size: 12px !important;
-        }
 
-        .card,
-        .ad-row {
-          /*   background-color: #ef4444; */
-          flex-direction: column !important;
-          align-items: flex-start !important;
-          gap: 1px !important;
-        }
-
-        .ad-text,
-        .card__title,
-        .cards .card p {
-          font-size: 12px !important;
-          line-height: 1.2 !important;
-          margin: 0 !important;
-        }
-
-        .ad-expire {
-          font-size: 11px !important;
-          padding: 4px 6px !important;
-          border-radius: 6px !important;
-        }
-
-        .chip,
-        .btn {
-          padding: 4px 6px !important;
-          font-size: 11px !important;
-          border-radius: 6px !important;
-        }
-
-        .cards {
-          gap: 6px !important;
-        }
-      }
       /* === 280px: цена в правом верхнем углу === */
       @media (max-width: 280px) {
         .card__head {
@@ -1096,7 +875,7 @@
         .card__title {
           display: block !important;
           font-size: 13px !important;
-          font-weight: 600 !important;
+          font-weight: 800 !important;
           margin: 0 !important;
           padding-right: 50px !important; /* резерв справа под цену */
         }
@@ -1105,8 +884,8 @@
           position: absolute !important;
           top: 0 !important;
           left: 175px !important;
-          font-weight: 800 !important;
-          font-size: 13px !important;
+          font-weight: 700 !important;
+          font-size: 11px !important;
           color: #000 !important;
         }
       }
@@ -1129,7 +908,7 @@
         background: #fff !important;
         border: 1px solid #d1d5db !important;
         border-radius: 10px !important;
-        box-shadow: 0 8px 20px rgba(17, 24, 39, 0.12) !important;
+        box-shadow: 0 8px 20px rgba(39, 24, 17, 0.12) !important;
         padding: 8px !important;
         z-index: 4000 !important;
       }

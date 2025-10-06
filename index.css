@@ -997,3 +997,798 @@ textarea::placeholder {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25); /* глубже при наведении */
   transform: translateY(-2px); /* лёгкий подъём */
 }
+/* Карточки объявлений — сетка и отступы */
+.cards {
+  display: grid;
+  gap: 8px;
+}
+@media (min-width: 480px) {
+  .cards {
+    gap: 10px;
+  }
+}
+
+/* Ноутбук (≥960px) — шире сайдбар, дыхание у карточек */
+@media (min-width: 960px) {
+  .wrap {
+    max-width: 1100px;
+  } /* уже есть, оставляем как есть */
+  .main {
+    grid-template-columns: 260px 1fr;
+    gap: 14px;
+  }
+  .cards {
+    gap: 12px;
+  }
+  .city-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* ПК/широкие (≥1200px) — комфортные поля и сетка карточек плотнее */
+@media (min-width: 1200px) {
+  .wrap {
+    max-width: 1240px;
+  }
+  .main {
+    grid-template-columns: 280px 1fr;
+  }
+  .cards {
+    gap: 14px;
+  }
+}
+
+/* Вид карточки (если список собирает script.js — задаём «пилюлю» как на макете) */
+.cards > * {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+/* === Уменьшение шрифта объявлений (текст остаётся жирным) === */
+@media (max-width: 340px) {
+  .cards .card p,
+  .ad-text {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+  }
+}
+/* === Уменьшить шрифт текста объявлений на один пункт (жирность оставить) === */
+@media (max-width: 340px) {
+  .ad-text,
+  .card__title,
+  .cards .card p {
+    font-size: 15px !important; /* было ~16px → минус один пункт */
+    font-weight: 500 !important; /* жирность сохраняем */
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+}
+/* === Нижнее описание: курсив и подчёркивание === */
+@media (max-width: 340px) {
+  .card__desc,
+  .ad-text:last-child,
+  .cards .card p:last-child {
+    font-style: italic !important;
+    text-decoration: underline !important;
+  }
+}
+/* === 280px: компактные карточки объявлений === */
+@media (max-width: 280px) {
+  .cards > * {
+    /*  background-color: #2563eb; */
+    padding: 1px 8px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+  }
+
+  .card,
+  .ad-row {
+    /*   background-color: #ef4444; */
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1px !important;
+  }
+
+  .ad-text,
+  .card__title,
+  .cards .card p {
+    font-size: 12px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+
+  .ad-expire {
+    font-size: 11px !important;
+    padding: 4px 6px !important;
+    border-radius: 6px !important;
+  }
+
+  .chip,
+  .btn {
+    padding: 4px 6px !important;
+    font-size: 11px !important;
+    border-radius: 6px !important;
+  }
+
+  .cards {
+    gap: 6px !important;
+  }
+}
+/* ===== Блок фильтров ===== */
+.filters {
+  margin-top: 4px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .filters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 960px) {
+  .filters {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.filters {
+  align-items: flex-start;
+}
+/* 340px: фикс выпадашки "Город" — открывается прямо под кнопкой */
+@media (max-width: 340px) {
+  /* сброс любых прежних смещений */
+  #city-dd,
+  .filters details.dd:nth-of-type(3) {
+    top: auto !important;
+  }
+
+  #city-dd {
+    position: relative !important;
+    overflow: visible !important;
+    z-index: 4000 !important;
+  }
+  #city-dd > .dd__panel {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    display: grid !important;
+    padding: 8px !important;
+    background: #fff !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14) !important;
+    max-height: 55vh !important;
+    overflow: auto !important;
+    z-index: 4001 !important;
+  }
+}
+/* >640px: уменьшенные и выровненные в ряд фильтры */
+@media (min-width: 641px) {
+  .filters {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* три равных блока */
+    gap: 8px !important;
+    align-items: center !important;
+  }
+
+  .title {
+    display: contents !important; /* расплющиваем обёртку */
+  }
+
+  .filters .dd {
+    padding: 2px !important;
+    border-radius: 6px !important;
+  }
+
+  .filters .dd > summary {
+    min-height: 32px !important;
+    padding: 4px 6px !important;
+    font-size: 13px !important; /* чуть меньше текста */
+    font-weight: 500 !important;
+  }
+
+  .filters .dd + .dd {
+    margin-top: 0 !important;
+  }
+}
+/* >640px: выравнивание фильтров по одной линии */
+@media (min-width: 641px) {
+  .filters {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important; /* все на один уровень */
+  }
+
+  .title {
+    display: contents !important; /* расплющиваем обёртку */
+  }
+
+  /* снимаем вертикальные смещения */
+  .filters .dd,
+  .filters .dd + .dd {
+    margin-top: 0 !important;
+    transform: translateY(0) !important;
+    vertical-align: middle !important;
+  }
+}
+/* ≥641px — верхние три фильтра в ОДИН ряд, компактные и на одном уровне */
+@media (min-width: 641px) {
+  .filters {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    align-items: center !important;
+  }
+  .title {
+    display: contents !important;
+  } /* расплющиваем обёртку */
+  .filters .dd {
+    padding: 2px !important;
+    border-radius: 6px !important;
+  }
+  .filters .dd > summary {
+    min-height: 32px !important;
+    padding: 4px 6px !important;
+    font-size: 13px !important;
+  }
+  .filters .dd + .dd {
+    margin-top: 0 !important;
+  } /* убираем «ступеньку» */
+}
+/* === 280px: уменьшенная шапка === */
+@media (max-width: 280px) {
+  .bar {
+    padding: 4px 6px !important;
+    border-radius: 8px !important;
+  }
+
+  .bar__row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 1px !important;
+  }
+
+  .brand {
+    font-size: 13px !important;
+    gap: 1px !important;
+  }
+
+  .brand__logo {
+    font-size: 16px !important;
+  }
+
+  .nav {
+    flex-direction: column !important;
+    gap: 1px !important;
+  }
+
+  .nav .chip {
+    display: inline-block;
+
+    margin: 0px 0px 0px -190px !important;
+    padding: 3px 6px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    z-index: 1000 !important;
+  }
+
+  .nav .btn {
+    display: inline-block;
+    margin: -25px 0px 0px 100px !important;
+
+    padding: 4px 6px !important;
+    font-size: 12px !important;
+    border-radius: 6px !important;
+    z-index: 2000 !important;
+  }
+
+  .filters .dd > summary {
+    margin: 0px 0px 0px 0px !important;
+
+    font-size: 12px !important;
+    padding: 1px 8px !important;
+    min-height: 20px !important;
+  }
+
+  .filters .dd {
+    padding: 0px !important;
+  }
+
+  .filters {
+    gap: 0px !important;
+  }
+}
+/* Планшет (≥640px) — две колонки: узкий сайдбар + контент */
+@media (min-width: 640px) {
+  .main {
+    grid-template-columns: 220px 1fr;
+  }
+  .sidebar {
+    order: 1;
+    position: sticky;
+    top: 90px; /* держим боковуху под шапкой */
+    align-self: start;
+  }
+  .main__right {
+    order: 2;
+  }
+  .city-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 340px) {
+  .ad-expire {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    text-align: center;
+  }
+}
+
+/* === ФИКС АДАПТИВА ХЕДЕРА (кнопка не вылазит) === */
+@media (max-width: 420px) {
+  .wrap {
+    padding: 0 8px;
+  } /* чуть меньше поля контейнера */
+
+  .bar__row {
+    flex-wrap: wrap; /* разрешаем перенос на 2-ю строку */
+    gap: 8px;
+  }
+
+  .nav {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .nav .chip,
+  .nav .btn {
+    flex: 1; /* кнопки тянутся равномерно */
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal; /* разрешаем перенос текста */
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+    text-align: center;
+    padding: 8px 10px; /* компактнее на телефоне */
+    font-size: 14px;
+  }
+}
+
+.ad-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ad-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.ad-expire {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+@media (max-width: 340px) {
+  .ad-expire {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    text-align: center;
+  }
+}
+/* 340px: объявления под чек-боксами */
+@media (max-width: 340px) {
+  .main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .sidebar {
+    order: 1 !important;
+  } /* Категории (чек-боксы) — выше */
+  .main__right {
+    order: 2 !important;
+  } /* Лента объявлений — ниже */
+}
+/* 340px: чекбоксы (Категория) во всю ширину интерфейса */
+@media (max-width: 340px) {
+  /* убираем двухколоночную сетку и фикс 200px */
+  .main {
+    display: block !important;
+    grid-template-columns: none !important;
+  }
+
+  /* растягиваем левую колонку */
+  .sidebar {
+    width: 100% !important;
+  }
+
+  /* сам блок категорий на всю ширину контейнера */
+  #side-category,
+  .side__section {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* строки списка лишь выравниваем — высоту не меняем */
+  .side__list label {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+}
+/* === 340px: скрыть заголовок "Категория" === */
+@media (max-width: 340px) {
+  .side__head {
+    display: none !important;
+  }
+}
+/* === 340px: скрыть кнопку "По номеру телефона" === */
+@media (max-width: 340px) {
+  #phone-dd {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+.title {
+  padding: 0px;
+  margin: 0px;
+}
+
+/* === 340px: убрать светлую рамку у блока "Категория" === */
+@media (max-width: 340px) {
+  #sidebar,
+  #side-category,
+  .side__section {
+    border: none !important;
+    box-shadow: none !important;
+    background: #d4d4d8 !important; /* сохраняем общий фон */
+  }
+}
+/* === 340px: уменьшить серый блок "Категория" === */
+@media (max-width: 340px) {
+  .sidebar {
+    padding: 4px 6px !important;
+    margin: 0 !important;
+  }
+
+  #side-category {
+    padding: 4px 6px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+  }
+
+  #side-category .side__list {
+    gap: 2px !important;
+  }
+
+  #side-category .side__list label {
+    font-size: 12px !important;
+    line-height: 1.1 !important;
+    padding: 2px 0 !important;
+  }
+}
+
+.ad-expire {
+  position: relative;
+  z-index: 1000 !important; /* поднимаем поверх других слоёв */
+}
+/* 327–540px: чек-боксы (Категория) вверху, на всю ширину */
+@media (min-width: 327px) and (max-width: 540px) {
+  .main {
+    /* ленту и сайдбар складываем в колонку */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .sidebar {
+    /* блок категорий — выше ленты */
+    order: 1 !important;
+    width: 100% !important;
+    position: static !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+    padding: 6px 8px !important;
+  }
+  .main__right {
+    /* лента объявлений — ниже */
+    order: 2 !important;
+  }
+  #side-category,
+  .side__section {
+    /* растянуть сам блок категорий */
+    width: 100% !important;
+    box-sizing: border-box !important;
+    border-radius: 10px !important;
+  }
+  #side-category .side__list {
+    /* сетка пунктов — компактно */
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  #side-category .side__list label {
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    padding: 2px 0 !important;
+    grid-template-columns: 16px 1fr !important; /* квадратик + текст */
+    column-gap: 8px !important;
+  }
+}
+/* >400px: сайдбар слева, лента справа (2 колонки) */
+@media (min-width: 401px) and (max-width: 639px) {
+  .main {
+    display: grid !important;
+    grid-template-columns: 240px 1fr !important; /* ширина сайдбара */
+    gap: 12px !important;
+    align-items: start !important;
+  }
+
+  .sidebar {
+    order: 1 !important;
+    width: 240px !important;
+    position: sticky !important;
+    top: var(--bar-h, 56px) !important; /* под шапкой */
+    align-self: start !important;
+  }
+  .main__right {
+    order: 2 !important;
+  }
+
+  /* внутри категорий — одна колонка, компактно */
+  #side-category .side__list {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  #side-category .side__list label {
+    display: grid !important;
+    grid-template-columns: 16px 1fr !important;
+    column-gap: 8px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+  }
+}
+/* === >400px: чек-боксы уже и компактнее === */
+@media (min-width: 401px) {
+  .sidebar {
+    width: 180px !important; /* делаем панель уже */
+    padding: 6px 8px !important;
+  }
+
+  #side-category,
+  .side__section {
+    padding: 6px 8px !important;
+    border-radius: 10px !important;
+  }
+
+  #side-category .side__list {
+    gap: 4px !important; /* плотнее строки */
+  }
+
+  #side-category .side__list label {
+    font-size: 13px !important; /* немного меньше шрифт */
+    line-height: 1.1 !important;
+    grid-template-columns: 14px 1fr !important; /* квадрат + текст */
+    column-gap: 6px !important;
+  }
+
+  #side-category .side__list input[type="checkbox"] {
+    width: 12px !important; /* меньше квадраты */
+    height: 12px !important;
+  }
+}
+/* >400px: всё влезает, без обрезки карточек */
+@media (min-width: 401px) and (max-width: 639px) {
+  /* контейнер шире, чем 70vw — иначе правая колонка слишком узкая */
+  .wrap {
+    max-width: 96vw !important; /* даём месту карточкам */
+  }
+}
+
+/* сетка: узкий сайдбар + контент */
+.main {
+  display: grid !important;
+  grid-template-columns: 180px 1fr !important; /* уже левую панель */
+  gap: 10px !important;
+  align-items: start !important;
+}
+
+.sidebar {
+  width: 180px !important;
+}
+
+/* правая колонка не режет тени/края карточек */
+.main__right {
+  overflow: visible !important; /* убираем clipping по бокам */
+}
+
+/* список — свой скролл, запас под скроллбар */
+#list {
+  overflow-y: auto !important;
+  padding-right: 10px !important; /* чтобы скролл не накрыв*/
+}
+
+/* === STABILIZER: строгие диапазоны без пересечений === */
+
+/* ≤340px — всё в одну колонку, сайдбар сверху, ничего не выпадает */
+@media (max-width: 340px) {
+  .wrap {
+    padding: 0 8px !important;
+  }
+  .main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .sidebar {
+    order: 1 !important;
+    width: 100% !important;
+    position: static !important;
+    margin: 0 !important;
+  }
+  .main__right {
+    order: 2 !important;
+    overflow: visible !important;
+  }
+  .filters {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  .title {
+    display: contents !important;
+  }
+  .dd > summary {
+    min-height: 36px !important;
+  }
+  /* панели выпадашек прямо под кнопкой */
+  .dd__panel {
+    position: absolute !important;
+    top: calc(100% + 4px) !important;
+    left: 0;
+    right: 0;
+    z-index: 4001;
+  }
+  .dd:not([open]) .dd__panel {
+    display: none !important;
+  }
+}
+
+/* 327–540px — сайдбар (чекбоксы) СВЕРХУ на всю ширину */
+@media (min-width: 327px) and (max-width: 540px) {
+  .main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .sidebar {
+    order: 1 !important;
+    width: 100% !important;
+    position: static !important;
+  }
+  .main__right {
+    order: 2 !important;
+  }
+}
+
+/* 401–639px — два столбца: узкий сайдбар слева + контент, всё помещается */
+@media (min-width: 401px) and (max-width: 639px) {
+  .wrap {
+    max-width: 96vw !important;
+  }
+  .main {
+    display: grid !important;
+    grid-template-columns: 180px 1fr !important;
+    gap: 10px !important;
+    align-items: start !important;
+  }
+  .sidebar {
+    width: 180px !important;
+    position: sticky !important;
+    top: var(--bar-h, 56px) !important;
+    align-self: start !important;
+  }
+  .main__right {
+    overflow: visible !important;
+  }
+  #list {
+    overflow-y: auto !important;
+    padding-right: 10px !important;
+  }
+}
+
+/* >280px: чек-боксы "Категория" в две колонки */
+@media (min-width: 281px) {
+  #side-category .side__list {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  #side-category .side__list label {
+    display: grid !important; /* квадрат + текст в строке */
+    grid-template-columns: 16px 1fr !important;
+    column-gap: 8px !important;
+    align-items: center !important;
+  }
+  #side-category .side__list input[type="checkbox"] {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+/* >400px: чек-боксы "Категория" в один столбик */
+@media (min-width: 401px) {
+  #side-category .side__list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+} /* === 375–667px: скрыть кнопку "По номеру телефона" === */
+@media (min-width: 340px) and (max-width: 667px) {
+  #phone-dd {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* === Убрать внешние отступы у блока с чек-боксами === */
+#side-category,
+.sidebar,
+.side__section {
+  margin: 0 !important;
+}
+/* === 280–400px: чек-боксы в два столбца и уменьшенный шрифт === */
+@media (min-width: 278px) and (max-width: 400px) {
+  #side-category .side__list {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important; /* два столбца */
+    gap: 6px !important;
+  }
+
+  #side-category .side__list label {
+    display: grid !important;
+    grid-template-columns: 16px 1fr !important; /* квадрат + текст */
+    align-items: center !important;
+    column-gap: 6px !important;
+    font-size: 13px !important; /* уменьшенный шрифт */
+    line-height: 1.1 !important;
+  }
+
+  #side-category .side__list input[type="checkbox"] {
+    width: 14px !important;
+    height: 14px !important;
+  }
+}
+
+/* === 280px: цена в правом верхнем углу === */
+@media (max-width: 280px) {
+  .card__head {
+    position: relative !important;
+    display: block !important;
+  }
+
+  .card__title {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    padding-right: 50px !important; /* резерв справа под цену */
+  }
+
+  .card__price {
+    position: absolute !important;
+    top: 0 !important;
+    left: 175px !important;
+    font-weight: 800 !important;
+    font-size: 13px !important;
+    color: #000 !important;
+  }
+}
