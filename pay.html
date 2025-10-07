@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Оплата</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      .pay {
+        max-width: 600px;
+        margin: 16px auto;
+      }
+      .pay__panel {
+        background: #e5e7eb;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .pay__title {
+        margin: 0 0 8px;
+        text-align: center;
+      }
+      .pay__card {
+        font: 700 22px/1.2 ui-sans-serif, system-ui;
+        letter-spacing: 2px;
+        background: #fff;
+        border: 1px dashed #9ca3af;
+        border-radius: 10px;
+        padding: 12px;
+        text-align: center;
+      }
+      .pay__help {
+        margin: 12px 0;
+        padding: 12px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+      }
+      .pay__list {
+        margin: 8px 0 0 0;
+        padding-left: 18px;
+      }
+      .btn {
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+
+        display: flex; /* включаем флекс */
+        align-items: center; /* вертикальное центрирование */
+        justify-content: center; /* горизонтальное центрирование */
+        text-decoration: none; /* убираем подчёркивание у <a> */
+        font-size: 22px; /* ← увеличенный размер шрифта */
+        font-weight: 600; /* жирность для акцента */
+        letter-spacing: 2px; /* ← расстояние между буквами */
+      }
+
+      .btn.green {
+        background: #ff3333;
+        border-color: #16a34a;
+        color: #fff;
+        font-weight: 700;
+      }
+      .btn.gray {
+        background: #fff;
+        color: #111;
+      }
+      .pay__row {
+        display: flex;
+        gap: 8px;
+        justify-content: space-between;
+        margin-top: 12px;
+      }
+      .pay__row .btn {
+        flex: 1;
+      }
+      body {
+        font-family: sans-serif;
+        background: #b0b0b0; /* более тёмно-серый */
+        padding: 0;
+      }
+      /* === SCALE +15% ДЛЯ pay.html === */
+      :root {
+        --scale: 2;
+      }
+
+      .pay {
+        max-width: calc(600px * var(--scale));
+      }
+      .pay__panel {
+        padding: calc(16px * var(--scale));
+        border-radius: calc(12px * var(--scale));
+      }
+      .pay__title {
+        font-size: calc(28px * var(--scale));
+        margin: 0 0 calc(12px * var(--scale));
+        letter-spacing: 2px;
+      }
+      .pay__card {
+        font-size: calc(22px * var(--scale));
+        padding: calc(14px * var(--scale));
+        border-radius: calc(12px * var(--scale));
+      }
+      .pay__help {
+        font-size: calc(16px * var(--scale));
+        padding: calc(14px * var(--scale));
+      }
+      .pay__list {
+        padding-left: calc(22px * var(--scale));
+      }
+      .pay__row {
+        gap: calc(12px * var(--scale));
+        margin-top: calc(14px * var(--scale));
+      }
+
+      .btn {
+        font-size: calc(22px * var(--scale));
+        padding: calc(12px * var(--scale)) calc(18px * var(--scale));
+        border-radius: calc(12px * var(--scale));
+      }
+      .brand__name {
+        font-size: calc(18px * var(--scale));
+      }
+
+      /* На очень узких экранах уменьшаем масштаб, чтобы не “расползалось” */
+      @media (max-width: 480px) {
+        :root {
+          --scale: 1.1;
+        }
+        .pay {
+          max-width: 100%;
+          margin: 12px auto;
+        }
+      }
+      /* === АДАПТИВ ШРИФТОВ И КНОПОК (узкие экраны) === */
+
+      /* ширина контейнера без переполнения */
+      .pay {
+        max-width: min(100%, calc(600px * var(--scale)));
+        margin: 12px auto;
+      }
+
+      /* заголовок */
+      .pay__title {
+        font-size: clamp(20px, 6vw, calc(28px * var(--scale)));
+        letter-spacing: clamp(1px, 0.6vw, 2px);
+        margin-bottom: clamp(8px, 2vw, 12px);
+      }
+
+      /* номер карты */
+      .pay__card {
+        font-size: clamp(14px, 6vw, 26px);
+        letter-spacing: clamp(1px, 0.9vw, 3px);
+        padding: clamp(10px, 3.2vw, calc(14px * var(--scale)));
+        border-radius: clamp(8px, 2.6vw, calc(12px * var(--scale)));
+      }
+
+      /* текст и список */
+      .pay__help {
+        font-size: clamp(14px, 4.2vw, calc(16px * var(--scale)));
+        padding: clamp(10px, 3vw, calc(14px * var(--scale)));
+      }
+      .pay__list {
+        padding-left: clamp(16px, 4vw, calc(22px * var(--scale)));
+      }
+
+      /* кнопки */
+      .btn {
+        font-size: clamp(14px, 5vw, 24px);
+        padding: clamp(10px, 3.2vw, calc(12px * var(--scale)))
+          clamp(12px, 4.2vw, calc(18px * var(--scale)));
+        border-radius: clamp(10px, 3vw, calc(12px * var(--scale)));
+      }
+
+      /* промежутки */
+      .pay__row {
+        gap: clamp(8px, 2.6vw, calc(12px * var(--scale)));
+        margin-top: clamp(10px, 3vw, calc(14px * var(--scale)));
+      }
+
+      /* очень узкие экраны: кнопки в столбик */
+      @media (max-width: 360px) {
+        .pay__row {
+          flex-direction: column;
+        }
+        .pay__row .btn {
+          width: 100%;
+        }
+      }
+      /* === МОБИЛЬНЫЕ ОВЕРРАЙДЫ: УМЕНЬШАЕМ НОМЕР И КНОПКИ === */
+      @media (max-width: 420px) {
+        :root {
+          --scale: 1;
+        } /* на телефонах глобальный масштаб не увеличиваем */
+
+        .pay {
+          max-width: 100%;
+          margin: 12px auto;
+        }
+
+        .pay__panel {
+          padding: 12px !important;
+          border-radius: 10px !important;
+        }
+
+        .pay__title {
+          font-size: clamp(18px, 6vw, 24px) !important;
+          margin-bottom: clamp(8px, 2vw, 12px) !important;
+          letter-spacing: clamp(0.5px, 0.5vw, 1.5px) !important;
+        }
+
+        /* Номер карты: БЕЗ var(--scale) */
+        .pay__card {
+          font-size: clamp(14px, 1.2vw, 20px) !important;
+          letter-spacing: clamp(0.6px, 0.8vw, 2px) !important;
+          padding: clamp(8px, 2.8vw, 12px) !important;
+          border-radius: clamp(6px, 2vw, 10px) !important;
+        }
+
+        .pay__help {
+          font-size: clamp(13px, 3.8vw, 15px) !important;
+          padding: clamp(8px, 2.6vw, 12px) !important;
+        }
+        .pay__list {
+          padding-left: clamp(14px, 4vw, 20px) !important;
+        }
+
+        /* Кнопки: БЕЗ var(--scale) */
+        .btn {
+          font-size: clamp(14px, 5vw, 18px) !important;
+          padding: clamp(8px, 2.6vw, 12px) /* вертикаль */
+            clamp(10px, 3.4vw, 14px) /* горизонталь */ !important;
+          border-radius: clamp(8px, 2.2vw, 10px) !important;
+        }
+        /* Нижний блок кнопок */
+        .pay__row {
+          display: flex;
+          justify-content: center;
+          gap: 12px;
+
+          margin-top: 20px; /* отступ сверху */
+          margin-bottom: 10px; /* отступ снизу */
+        }
+      }
+
+      /* Очень узкие экраны — кнопки в столбик */
+      @media (max-width: 340px) {
+        .pay__row {
+          flex-direction: column;
+        }
+        .pay__row .btn {
+          width: 100%;
+        }
+      }
+      /* Общие стили для кнопок внутри .pay__row */
+      .pay__row .btn {
+        display: inline-flex; /* делаем flex для центрирования текста */
+        align-items: center; /* текст по вертикали по центру */
+        justify-content: center; /* по горизонтали по центру */
+        min-height: 48px; /* одинаковая высота */
+        padding: 0 20px; /* одинаковые внутренние отступы */
+        font-size: 16px;
+        box-sizing: border-box; /* учитываем границы */
+        width: 140px; /* одинаковая ширина, можно менять */
+      }
+      /* Центрируем нижний блок с кнопками */
+      .pay__row {
+        display: flex;
+        justify-content: center; /* кнопки по центру */
+        align-items: center; /* по вертикали */
+        gap: 16px; /* расстояние между ними */
+        margin-top: 20px;
+      }
+
+      /* Чтобы занимали одинаковую ширину и центрировались */
+      .pay__row .btn {
+        width: 150px; /* фиксируем одинаковую ширину */
+        text-align: center;
+      }
+
+      /* Центрируем нижний блок с кнопками */
+      .pay__row {
+        display: flex;
+        justify-content: center; /* кнопки по центру */
+        align-items: center; /* по вертикали */
+        gap: 16px; /* расстояние между ними */
+        margin-top: 20px;
+      }
+
+      /* Чтобы занимали одинаковую ширину и центрировались */
+      .pay__row .btn {
+        width: 150px; /* фиксируем одинаковую ширину */
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="bar">
+        <div class="bar__inner">
+          <div class="brand">
+            <span class="brand__logo">💳</span
+            ><span class="brand__name">Оплата услуги</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="pay">
+        <section class="pay__panel" aria-labelledby="payTitle">
+          <h1 id="payTitle" class="pay__title">НОМЕР КАРТЫ</h1>
+          <div class="pay__card" aria-label="Номер карты">
+            4441&nbsp;1144&nbsp;6258&nbsp;4911
+          </div>
+
+          <div class="pay__help">
+            <strong>Як оплатити послугу:</strong>
+            <ol class="pay__list">
+              <li>
+                Для активації оголошення внесіть 3 грн на карту, вказану вище.
+              </li>
+              <li>Підтвердьте оплату кнопкою «Оплачено».</li>
+              <li>Поверніться до оголошення кнопкою «Назад».</li>
+              <li>
+                Коли кнопка «Оплачено» засвітиться зеленим — ваше оголошення
+                готове до публікації.
+              </li>
+            </ol>
+          </div>
+
+          <div class="pay__row">
+            <button id="paidBtn" class="btn green" type="button">
+              Оплатить
+            </button>
+            <a class="btn gray" href="create.html">Назад</a>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // Фиксируем факт оплаты
+      document.getElementById("paidBtn")?.addEventListener("click", () => {
+        localStorage.setItem("payment_ok", "1");
+        alert("Оплата подтверждена. Можно вернуться к объявлению.");
+      });
+    </script>
+    <script src="script.js"></script>
+
+    <script>
+      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
+
+      async function apiStatus() {
+        try {
+          const r = await fetch(API + "/ads", { cache: "no-store" });
+          return r.ok;
+        } catch {
+          return false;
+        }
+      }
+      function showApiStatus(elId = "apiStatus") {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        apiStatus().then((ok) => {
+          el.textContent = ok ? "API: OK" : "API: OFFLINE";
+          el.style.color = ok ? "#16a34a" : "#ef4444";
+        });
+      }
+      document.addEventListener("DOMContentLoaded", () => showApiStatus());
+    </script>
+  </body>
+</html>
