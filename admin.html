@@ -126,7 +126,7 @@
     </div>
     <script>
       // ===== Настройки API (тестовый json-server) =====
-      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/";
+      const API = "http://localhost:3000";
 
       // ===== DOM =====
       const form = document.getElementById("feedbackForm");
@@ -253,7 +253,7 @@
           };
 
           // отправляем POST-запрос на сервер
-          await fetch("https://68e3a1098e14f4523dae1d54.mockapi.io//feedback", {
+          await fetch("http://localhost:3000/feedback", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
