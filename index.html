@@ -1088,13 +1088,27 @@
             </details>
 
             <!-- Тип сделки -->
-            <details class="dd">
-              <summary>Тип сделки</summary>
+            <details class="dd" id="deal-dd">
+              <summary
+                id="deal-summary"
+                data-default-ru="Тип сделки"
+                data-default-ua="Тип угоди"
+              >
+                Тип сделки
+              </summary>
               <div class="dd__panel">
-                <button class="dd__item" type="button">Купля</button>
-                <button class="dd__item" type="button">Продажа</button>
-                <button class="dd__item" type="button">Отдам</button>
-                <button class="dd__item" type="button">Возьму в дар</button>
+                <button class="dd__item" type="button" data-deal="buy">
+                  Куплю
+                </button>
+                <button class="dd__item" type="button" data-deal="sell">
+                  Продажа
+                </button>
+                <button class="dd__item" type="button" data-deal="give">
+                  Отдам
+                </button>
+                <button class="dd__item" type="button" data-deal="take">
+                  Возьму в дар
+                </button>
               </div>
             </details>
           </div>
@@ -1154,13 +1168,13 @@
 
       <!-- Боковая панель -->
     </div>
-    <script src="./script.js?v=1" defer></script>
+
     <div
       id="apiStatus"
       style="text-align: right; font-size: 12px; opacity: 0.85"
     ></div>
     <script>
-      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
 
       async function apiStatus() {
         try {
@@ -1178,8 +1192,55 @@
           el.style.color = ok ? "#16a34a" : "#ef4444";
         });
       }
-      document.addEventListener("DOMContentLoaded", () => showApiStatus());
+      document.addEventListener("DOMContentLoaded", () => {
+        showApiStatus();
+
+        const feedBtn = document.getElementById("feed-reset"); // Лента / Стрічка
+        const dealDD = document.getElementById("deal-dd");
+        const dealSummary = document.getElementById("deal-summary");
+
+        const defaultLabel =
+          (dealSummary &&
+            (dealSummary.getAttribute("data-default-ua") ||
+              dealSummary.getAttribute("data-default-ru"))) ||
+          "Тип сделки";
+
+        function clearDeal() {
+          // Чистим возможные ключи фильтра в localStorage (на случай, если твой script.js их ставит)
+          try {
+            Object.keys(localStorage).forEach((k) => {
+              if (/deal/i.test(k) || /filter\.deal/i.test(k))
+                localStorage.removeItem(k);
+            });
+          } catch {}
+
+          // Закрыть выпадашку и вернуть подпись
+          if (dealDD && dealDD.hasAttribute("open"))
+            dealDD.removeAttribute("open");
+          if (dealSummary) dealSummary.textContent = defaultLabel;
+
+          // Сообщить приложению / перерисовать
+          if (typeof window.applyFilters === "function") window.applyFilters();
+          else if (typeof window.renderAds === "function") window.renderAds();
+          else location.reload(); // безопасный фолбэк
+        }
+
+        if (feedBtn) feedBtn.addEventListener("click", clearDeal);
+      });
     </script>
-    <script src="js/ads-api.js"></script>
+    <!-- файл в КОРНЕ, без /js/ -->
+    <script src="ads-api.js?v=9" defer></script>
+    <script src="script.js?v=9" defer></script>
+    <script>
+      // Автообновление ленты каждые 3 сек (работает между устройствами)
+      document.addEventListener("DOMContentLoaded", () => {
+        if (window.__adsPollStarted) return;
+        window.__adsPollStarted = true;
+
+        const tick = () => window.ADS_API?.loadAds(); // тянет и перерисовывает
+        tick(); // сразу подтянуть
+        setInterval(tick, 3000); // потом каждые 3 с
+      });
+    </script>
   </body>
 </html>

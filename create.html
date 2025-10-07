@@ -717,7 +717,7 @@
           let SERVICE_MODE = false; // режим "Услуги"
           const cleanPhone = (s) => s.replace(/[^\d+]/g, "");
           const normDeal = (d) =>
-            d === "Продам" ? "Продажа" : d === "Куплю" ? "Купля" : d;
+            d === "Продам" ? "Продам" : d === "Куплю" ? "Куплю" : d;
           const val = (id) => (document.getElementById(id)?.value || "").trim();
 
           function save() {
@@ -728,24 +728,29 @@
             const price = val("price");
             const city = val("city");
             const phone = cleanPhone(val("phone"));
-            const desc = val("desc");
+            const desc = (val("description") || val("desc")).trim();
+            const description = desc; // дублируем для совместимости
 
             if (SERVICE_MODE) {
               if (!service) return alert("Опиши услугу.");
               if (!phone) return alert("Введи телефон.");
               const ad = {
-                deal: "", // тип сделки не обязателен для услуг
+                deal: normDeal(deal),
                 category: "Услуги", // фиксируем категорию
                 title: service, // заголовок = текст услуги
                 price: "", // цена не нужна
                 city,
                 phone,
+                description: desc,
                 desc,
-                createdAt: Date.now(), // ← ДОБАВИЛА
+                createdAt: Date.now(),
               };
               const key = "ads";
               const ads = JSON.parse(localStorage.getItem(key) || "[]");
               ads.unshift(ad);
+              localStorage.setItem("ads_sync", String(Date.now())); // сигнал ленте
+              location.href = "index.html"; // переход на главную (по желанию)
+
               localStorage.setItem(key, JSON.stringify(ads));
               tryPostAd(ad); // ← ДОБАВИЛА ЗДЕСЬ
               location.href = "index.html";
@@ -1139,14 +1144,24 @@
     </div>
 
     <script>
-      const API = "http://localhost:3000"; // если json-server на другом порту — подправь
+      async function tryPostAd(ad) {
+        const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
+        try {
+          const res = await fetch(API + "/ads", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(ad),
+          });
+          if (!res.ok) throw new Error("Ошибка при сохранении объявления");
+          const created = await res.json();
 
-      function tryPostAd(ad) {
-        fetch(API + "/ads", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(ad),
-        }).catch(() => {}); // не ломает UX, если API OFFLINE
+          // метка для вкладок на этой же машине (если открыт index.html в другой вкладке)
+          localStorage.setItem("ads_sync", String(Date.now()));
+          // моментальный переход на ленту — объявление видно сразу на телефоне
+          location.href = "index.html";
+        } catch (err) {
+          alert("Ошибка: " + err.message);
+        }
       }
 
       // Индикатор статуса API (по желанию)
@@ -1167,6 +1182,5 @@
         })
       );
     </script>
-    <script src="js/ads-api.js"></script>
   </body>
 </html>

@@ -46,6 +46,15 @@ const norm = (s) =>
   String(s || "")
     .toLowerCase()
     .trim();
+// --- Канонизация типа сделки (синонимы → эталон)
+const normDeal = (s) => {
+  const x = norm(s);
+  if (/(купля|куплю|покупка)/.test(x)) return "купля";
+  if (/(продам|продаю|продажа)/.test(x)) return "продажа";
+  if (/(отдам|даром)/.test(x)) return "отдам";
+  if (/(возьму.*в.*дар|возьму|в дар)/.test(x)) return "возьму в дар";
+  return x;
+};
 
 // === ПЛЕЙСХОЛДЕР ДЛЯ ПУСТОГО СПИСКА ===
 function ensureEmptyStub() {
@@ -62,79 +71,74 @@ function ensureEmptyStub() {
   }
   return el;
 }
+// === РЕНДЕР ЛЕНТЫ (принимает данные из API, иначе из localStorage) ===
+function renderAds(data) {
+  const list = document.getElementById("list");
+  if (!list) return;
 
-// === РЕНДЕР ЛЕНТЫ С data-* ДЛЯ ТОЧНОГО ФИЛЬТРА ===
-(function renderAds() {
-  const box = document.getElementById("list");
-  if (!box) return;
+  const ads = Array.isArray(data)
+    ? data
+    : JSON.parse(localStorage.getItem("ads") || "[]");
 
   const now = Date.now();
-  const key = "ads";
-  const raw = JSON.parse(localStorage.getItem(key) || "[]");
-
   const valid = [];
-  let dirty = false; // ← будем знать, что нужно перезаписать localStorage
 
-  for (const ad of raw) {
+  // TTL и валидация
+  for (const ad of ads) {
     if (!ad) continue;
-    const okTitle = ad.title && ad.title.trim() !== "";
+    const okTitle = ad.title && String(ad.title).trim() !== "";
     const okPhone = ad.phone && String(ad.phone).trim() !== "";
     if (!okTitle || !okPhone) continue;
 
-    // ← если createdAt отсутствует — выставляем ОДИН РАЗ и помечаем dirty
     let createdAt = Number(ad.createdAt);
     if (!createdAt) {
       createdAt = now;
       ad.createdAt = createdAt;
-      dirty = true;
     }
 
     const age = now - createdAt;
-    if (age < TTL_DAYS * MS_DAY) {
-      valid.push(ad); // сохраняем уже с корректным createdAt
-    } else {
-      dirty = true; // просроченное — тоже повод переписать
-    }
-  }
-
-  if (dirty) {
-    localStorage.setItem(key, JSON.stringify(valid));
+    if (age < TTL_DAYS * MS_DAY) valid.push(ad);
   }
 
   if (valid.length === 0) {
-    box.innerHTML =
+    list.innerHTML =
       '<div class="empty">Объявлений пока нет. Нажми «Подать объявление».</div>';
+    ensureEmptyStub();
+    applyFilters();
     return;
   }
 
-  // 2) Рендер карточек с бейджем оставшихся дней
-  box.innerHTML = valid
+  list.innerHTML = valid
     .map((ad) => {
       const dealText =
         typeof ad.deal === "string"
           ? ad.deal
           : ad.deal?.label || ad.deal?.value || "";
-      const dealNorm = norm(dealText);
+      const dealNorm = normDeal(dealText);
+
       const showPrice =
         (dealNorm === "продам" || dealNorm === "продажа") &&
         ad.price &&
         String(ad.price).trim() !== "";
+
       const createdAt = Number(ad.createdAt) || now;
 
-      // начало суток ДНЯ СОЗДАНИЯ
       const createdDayStart = new Date(createdAt);
       createdDayStart.setHours(0, 0, 0, 0);
 
-      // начало сегодняшних суток
       const todayStart = new Date();
       todayStart.setHours(0, 0, 0, 0);
 
-      // прошедшие календарные дни (не меньше 0)
       let daysPassed = Math.floor((todayStart - createdDayStart) / MS_DAY);
       if (daysPassed < 0) daysPassed = 0;
 
-      // осталось дней
-      const daysLeft = Math.max(1, TTL_DAYS - daysPassed); // TTL_DAYS = 6
+      const daysLeft = Math.max(1, TTL_DAYS - daysPassed);
+      // ⬇️ вставить здесь
+      const rawDesc = (ad.description || ad.desc || "").trim();
+      const isSeed = /^description\s+\d+$/i.test(rawDesc); // "description 1/2/3..."
+      const descText = isSeed ? "" : rawDesc;
+      const lang = localStorage.inputLang === "uk" ? "uk" : "ru";
+      const labelDesc = lang === "uk" ? "Опис:" : "Описание:";
 
       return `
       <article class="card"
@@ -153,7 +157,10 @@ function ensureEmptyStub() {
           <span>${ad.category || ""}</span> ·
           <span>${ad.phone || ""}</span>
         </div>
-        <p class="card__desc">${ad.desc || ""}</p>
+       
+
+      <p class="card_desc">${ad.description || ad.desc || ""}</p>
+
 
         <div class="card__badge" aria-label="Срок публикации">Осталось ${daysLeft} дн.</div>
       </article>`;
@@ -162,7 +169,7 @@ function ensureEmptyStub() {
 
   ensureEmptyStub();
   applyFilters();
-})();
+}
 
 // === ЕДИНАЯ ФУНКЦИЯ ФИЛЬТРА ===
 function applyFilters() {
@@ -180,7 +187,8 @@ function applyFilters() {
 
     const okCity = !state.city || c === norm(state.city);
     const okCat = !state.category || k === norm(state.category);
-    const okDeal = !state.deal || d === norm(state.deal); // NEW ← проверка сделки
+    const okDeal = !state.deal || d === normDeal(state.deal);
+    // NEW ← проверка сделки
     const okPhone = phoneQuery.length >= 3 ? p.includes(phoneQuery) : true;
     const on = okCity && okCat && okDeal && okPhone; // добавили okDeal
     card.style.display = on ? "" : "none";
@@ -596,48 +604,117 @@ function applyFilters() {
   list?.addEventListener("focusin", closeIfOpen);
 })();
 // Безопасный сброс "Лента": НЕ перерисовываем левую панель.
+// Безопасный сброс "Лента": обнуляет все фильтры и возвращает подписи
 function resetFeedState() {
-  // 0) Обнулить состояние
+  // 1. Обнулить состояние
   state.city = "";
   state.category = "";
   state.deal = "";
   state.phone = "";
 
-  // 1) Закрыть все выпадашки
+  // 2. Закрыть все открытые выпадашки
   document
     .querySelectorAll("details.dd[open]")
     .forEach((d) => d.removeAttribute("open"));
 
-  // 2) Очистить поле телефона
+  // 3. Очистить поле телефона
   const phone = document.getElementById("phone");
   if (phone) phone.value = "";
 
-  // 3) Снять active-классы у чипов города
+  // 4. Удалить active-классы у кнопок города
   document
     .querySelectorAll(".city-btn.is-active, .chip[data-city].is-active")
     .forEach((b) => b.classList.remove("is-active"));
 
-  // 4) Вернуть подписи в summary
+  // 4) Вернуть подписи в summary (RU/UA и любые текущие надписи)
+  // 4) Вернуть подписи в summary (RU/UA и любые текущие надписи)
+  const lang =
+    (localStorage.getItem("inputLang") || "ru") === "uk" ? "uk" : "ru";
+  const dict =
+    lang === "uk"
+      ? {
+          city: "Місто",
+          cat: "Всі категорії",
+          deal: "Тип угоди",
+          phone: "За номером телефону",
+        }
+      : {
+          city: "Город",
+          cat: "Все категории",
+          deal: "Тип сделки",
+          phone: "По номеру телефона",
+        };
+
+  // Город
   const citySummary = document.getElementById("city-summary");
-  if (citySummary) citySummary.textContent = "Город";
+  if (citySummary) citySummary.textContent = dict.city;
+
+  // Остальные summary
   document.querySelectorAll(".filters details.dd > summary").forEach((s) => {
-    const t = s.textContent.trim();
-    if (t.includes("Катег")) s.textContent = "Все категории";
-    if (t.includes("Тип сделки")) s.textContent = "Тип угоди";
-    if (t.includes("телефона")) s.textContent = "За номером телефону";
+    const t = (s.textContent || "").trim();
+
+    // Категория
+    if (/(Все категории|Всі категорії|Категор(ия|ія))/i.test(t)) {
+      s.textContent = dict.cat;
+      return;
+    }
+
+    // Тип сделки / угоди + любые выбранные варианты
+    if (
+      /(Тип сделки|Тип угоди|Куплю|Продажа|Продам|Отдам|Возьму в дар)/i.test(t)
+    ) {
+      s.textContent = dict.deal;
+      return;
+    }
+
+    // По телефону
+    if (/(По номеру телефона|За номером телефону|телефон)/i.test(t)) {
+      s.textContent = dict.phone;
+      return;
+    }
   });
 
-  // 5) Снять ВСЕ галки в левом сайдбаре
+  if (ddCat) {
+    const s = ddCat.querySelector("summary");
+    if (s) s.textContent = LABELS.cat;
+  }
+
+  // Тип сделки (ищем по пунктам «Купля/Продажа/...», а не по текущему тексту summary)
+  const DEAL_OPTIONS = [
+    "Куплю",
+    "Продажа",
+    "Отдам",
+    "Возьму в дар",
+    "Куплю",
+    "Продам",
+    "Віддам",
+    "Візьму в дар",
+  ];
+  const ddDeal = Array.from(
+    document.querySelectorAll(".filters details.dd")
+  ).find((d) =>
+    Array.from(d.querySelectorAll(".dd__item")).some((btn) =>
+      DEAL_OPTIONS.includes((btn.textContent || "").trim())
+    )
+  );
+  if (ddDeal) {
+    const s = ddDeal.querySelector("summary");
+    if (s) s.textContent = LABELS.deal;
+  }
+
+  // 6. Снять все галки в сайдбаре
   document.querySelectorAll('#sidebar input[type="checkbox"]').forEach((ch) => {
     ch.checked = false;
   });
 
-  // 6) Применить фильтры (покажет всё) и обновить блокировку
+  // 7. Применить фильтры и обновить панель
   applyFilters();
+  updateSidebarLock?.();
 
-  // 7) Скролл вверх списка
+  // 8. Скролл вверх списка
   document.getElementById("list")?.scrollTo({ top: 0, behavior: "instant" });
 }
+
 // === ПЕРЕВОД СТРАНИЦЫ pay.html (RU ⇄ UA) ===
 function setPayUIStrings(lang) {
   const t = {
@@ -759,5 +836,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // проверка: мы на index.html
     const savedLang = localStorage.getItem("inputLang") || "ru";
     setIndexUIStrings(savedLang);
+  }
+});
+// Автообновление ленты по сигналу из localStorage (та же машина/браузер)
+window.addEventListener("storage", (e) => {
+  if (e.key === "ads" || e.key === "ads_sync") {
+    // покажем локальную копию без сети:
+    if (typeof window.renderAds === "function") window.renderAds();
+    // и тут же синхронизируемся с API:
+    window.ADS_API?.loadAds();
   }
 });
