@@ -1144,7 +1144,8 @@
       const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
 
       function tryPostAd() {
-        const desc = (val("description") || val("desc") || "").trim();
+        const desc = (document.getElementById("desc")?.value || "").trim();
+        const description = desc;
 
         const ad = {
           title: val("title"),
