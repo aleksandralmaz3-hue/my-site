@@ -133,11 +133,7 @@ function renderAds(data) {
       if (daysPassed < 0) daysPassed = 0;
 
       const daysLeft = Math.max(1, TTL_DAYS - daysPassed);
-      // ⬇️ вставить здесь
-      const rawDesc = (ad.description || ad.desc || "").trim();
-      const cleaned = rawDesc.replace(/\s+/g, " ").trim();
-      const isSeed = /^description\s*\d+[\.\-:]?$/i.test(cleaned);
-      const descText = isSeed ? "" : cleaned;
+      const descText = String(ad.description || ad.desc || "").trim();
 
       const lang = localStorage.inputLang === "uk" ? "uk" : "ru";
       const labelDesc = lang === "uk" ? "Опис:" : "Описание:";
