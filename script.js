@@ -149,7 +149,8 @@ function renderAds(data) {
         </div>
        
 
-        <p class="card__desc">${descText ? `${labelDesc} ${descText}` : ""}</p>
+      <p class="card_desc">${ad.description || ad.desc || ""}</p>
+
 
         <div class="card__badge" aria-label="Срок публикации">Осталось ${daysLeft} дн.</div>
       </article>`;
