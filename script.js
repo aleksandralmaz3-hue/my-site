@@ -143,7 +143,23 @@ function renderAds(data) {
       return `
       <article class="card"
         data-city="${norm(ad.city)}"
-        data-category="${norm(ad.category)}"
+        data-category="${norm(
+          ad.category
+            ?.replace("Транспорт", "Транспорт")
+            ?.replace("Жильё", "Жильё")
+            ?.replace("Техника", "Техника")
+            ?.replace("Животные", "Животные")
+            ?.replace("Продукты", "Продукты")
+            ?.replace("Одежда", "Одежда")
+            ?.replace("Электроника", "Электроника")
+            ?.replace("Украшения", "Украшения")
+            ?.replace("Для детей", "Для детей")
+            ?.replace("Инструменты", "Инструменты")
+            ?.replace("Прочее", "Прочее")
+            ?.replace("Услуги", "Услуги")
+        )}"
+
+        
         data-deal="${dealNorm}"
         data-phone="${digits(ad.phone)}"
       >
@@ -571,7 +587,6 @@ function applyFilters() {
   });
 })();
 
-// Автозакрытие "Город" при любой прокрутке (wheel / touchmove)
 (() => {
   const dd = document.getElementById("city-dd"); // есть в index.html
   if (!dd) return;
@@ -757,7 +772,6 @@ function setPayUIStrings(lang) {
   document.querySelector(".pay__row a")?.replaceChildren(t.backBtn);
 }
 
-// Автоприменение перевода на странице оплаты
 document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector("body .pay")) {
     // проверка: мы на pay.html
@@ -830,7 +844,6 @@ function setIndexUIStrings(lang) {
   document.querySelector("#side-deal h3")?.replaceChildren(t.deal);
 }
 
-// Автоприменение перевода на главной
 document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("list")) {
     // проверка: мы на index.html
@@ -838,7 +851,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setIndexUIStrings(savedLang);
   }
 });
-// Автообновление ленты по сигналу из localStorage (та же машина/браузер)
+
 window.addEventListener("storage", (e) => {
   if (e.key === "ads" || e.key === "ads_sync") {
     // покажем локальную копию без сети:
