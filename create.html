@@ -740,8 +740,9 @@
                 price: "", // цена не нужна
                 city,
                 phone,
-                desc,
-                createdAt: Date.now(), // ← ДОБАВИЛА
+                description: desc,
+                desc: desc,
+                createdAt: Date.now(),
               };
               const key = "ads";
               const ads = JSON.parse(localStorage.getItem(key) || "[]");
@@ -1167,6 +1168,5 @@
         })
       );
     </script>
-    <script src="js/ads-api.js"></script>
   </body>
 </html>
