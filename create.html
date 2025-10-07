@@ -729,12 +729,13 @@
             const city = val("city");
             const phone = cleanPhone(val("phone"));
             const desc = val("desc");
+            const description = desc; // дублируем для совместимости
 
             if (SERVICE_MODE) {
               if (!service) return alert("Опиши услугу.");
               if (!phone) return alert("Введи телефон.");
               const ad = {
-                deal: "", // тип сделки не обязателен для услуг
+                deal: normDeal(deal),
                 category: "Услуги", // фиксируем категорию
                 title: service, // заголовок = текст услуги
                 price: "", // цена не нужна
