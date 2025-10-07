@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ru" spellcheck="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="index.css" />
+    <title>Подать объявление</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #b4afaf;
+        padding: 0;
+      }
+      label {
+        display: block;
+        margin-top: 10px;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 6px;
+        margin-top: 4px;
+      }
+      .btn {
+        padding: 10px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #fff;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* ← лёгкая тень */
+        transition: box-shadow 0.2s ease, transform 0.1s ease;
+      }
+
+      .btn:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* тень глубже при наведении */
+        transform: translateY(-2px); /* лёгкий подъём */
+      }
+
+      .btn.red {
+        border-color: #f33;
+        background: #f33;
+        color: #fff;
+        border-radius: 8px;
+      }
+
+      .btn-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .btn-left {
+        display: flex;
+        gap: 16px; /* расстояние между "Сохранить" и "Сброс условий" */
+      }
+
+      .btn-right {
+        display: flex;
+        gap: 16 px; /* ← расстояние между кнопками */
+      }
+      .lang-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border: 1px solid #9ca3af;
+        border-radius: 9999px;
+        background: #f3f4f6;
+        color: #111;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .lang-btn:hover {
+        background: #e5e7eb;
+      }
+      .btn.green {
+        background: #16a34a;
+        border: 1px solid #16a34a;
+        color: #fff;
+        font-weight: 400;
+        font-size: 18px; /* ← увеличенный размер шрифта */
+        letter-spacing: 1px; /* ← межбуквенный интервал */
+      }
+      .btn.gray {
+        background: #d1d5db;
+        border-color: #d1d5db;
+        color: #111;
+      }
+
+      .lang-flag {
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      input[type="text"],
+      input[type="search"],
+      textarea {
+        spellcheck: true;
+      }
+      .lang-btn {
+        margin-left: 12px; /* ← отступ от соседних элементов */
+        flex-shrink: 0; /* ← запрет сжиматься */
+      }
+      /* Шапка — один ряд */
+      .bar__inner {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      /* Навигация уезжает вправо, язык будет после неё */
+      .nav {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+      }
+
+      /* Кнопка языка фикс. справа, без абсолютов */
+      #langBtn,
+      .lang-btn {
+        position: static !important;
+        margin-left: 12px;
+        flex: 0 0 40px;
+        width: 40px;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      @media (max-width: 480px) {
+        #langBtn,
+        .lang-btn {
+          flex-basis: 36px;
+          width: 36px;
+          height: 36px;
+        }
+      }
+      /* ==== create.html: компакт на телефонах ==== */
+      @media (max-width: 480px) {
+        /* Заголовок формы */
+        .panel h1 {
+          font-size: 16px !important;
+          line-height: 1.15 !important;
+          margin: 0 0 8px !important;
+          letter-spacing: 0 !important;
+        }
+
+        /* Кнопки в шапке (Лента / Подать объявление) */
+        .bar .btn,
+        .nav .btn {
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+
+        /* Все основные кнопки внутри формы */
+        .btn {
+          padding: 8px 10px !important;
+          font-size: 14px !important;
+          line-height: 1.1 !important;
+          min-width: 0 !important;
+        }
+        .btn.green,
+        .btn.red,
+        .btn-outline {
+          font-size: 14px !important; /* раньше 18px */
+          padding: 8px 10px !important;
+          letter-spacing: 0.2px !important;
+        }
+
+        /* Ряд кнопок под формой — ужимаем и переносим */
+        .btn-row {
+          gap: 8px !important;
+          flex-wrap: wrap !important;
+        }
+        .btn-left,
+        .btn-right {
+          width: 100% !important;
+          display: flex !important;
+          gap: 8px !important;
+        }
+        .btn-left .btn,
+        .btn-right .btn {
+          flex: 1 1 140px !important;
+        }
+      }
+
+      /* Очень узкие устройства */
+      @media (max-width: 360px) {
+        .btn-left .btn,
+        .btn-right .btn {
+          flex-basis: 100% !important;
+        } /* в столбик */
+        .panel h1 {
+          font-size: 15px !important;
+        }
+      }
+      /* ==== create.html: верхние кнопки в столбик ==== */
+      @media (max-width: 480px) {
+        .bar .nav {
+          flex-direction: column !important; /* кнопки в столбик */
+          align-items: stretch !important; /* растягиваются на всю ширину */
+          gap: 6px !important; /* промежуток между кнопками */
+        }
+        .bar .nav .btn,
+        .bar .nav .btn-outline {
+          width: 100% !important; /* кнопка на всю ширину */
+          text-align: center !important; /* текст по центру */
+        }
+      }
+      @media (max-width: 480px) {
+        /* Уменьшаем заголовок "Продай-ка!" */
+        .brand_name {
+          font-size: 14px !important; /* было крупнее */
+          line-height: 1.2 !important;
+        }
+
+        /* Уменьшаем кнопку (ru) */
+        #langBtn {
+          order: -1 !important; /* под "Продай-ка!" */
+          align-self: flex-start !important;
+          font-size: 10px !important; /* ещё меньше текст */
+          padding: 2px 5px !important; /* компактные поля */
+          line-height: 1 !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 28px !important; /* минимальная ширина */
+          height: auto !important;
+        }
+      }
+      /* === MOBILE HEADER: grid-раскладка === */
+      @media (max-width: 480px) {
+        /* раскладываем .bar_inner как сетку */
+        .bar_inner {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "brand"
+            "lang"
+            "nav" !important;
+          row-gap: 6px !important;
+          width: 100% !important;
+          align-items: start !important;
+        }
+
+        /* элементы по областям */
+        .bar_inner .brand {
+          grid-area: brand !important;
+        }
+        .bar_inner #langBtn {
+          grid-area: lang !important;
+        }
+        .bar_inner .nav {
+          grid-area: nav !important;
+        }
+
+        /* компактные размеры */
+        .brand_name {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+        #langBtn {
+          margin: 0 !important;
+          justify-self: start !important;
+          font-size: 10px !important;
+          padding: 2px 5px !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 24px !important;
+          line-height: 1 !important;
+        }
+        .bar_inner .nav {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+          width: 100% !important;
+        }
+        .bar_inner .nav .btn,
+        .bar_inner .nav .btn-outline {
+          width: 100% !important;
+          text-align: center !important;
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+      }
+      /* === MOBILE HEADER: правильный порядок brand → ru → nav === */
+      @media (max-width: 480px) {
+        /* сам контейнер шапки — именно .bar__inner */
+        .bar__inner {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          grid-template-areas:
+            "brand"
+            "lang"
+            "nav" !important;
+          row-gap: 6px !important;
+          width: 100% !important;
+          align-items: start !important;
+        }
+
+        /* области сетки */
+        .bar__inner .brand {
+          grid-area: brand !important;
+        }
+        .bar__inner #langBtn {
+          grid-area: lang !important;
+        }
+        .bar__inner .nav {
+          grid-area: nav !important;
+          margin-left: 0 !important; /* сбиваем margin-left:auto; */
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+          width: 100% !important;
+        }
+
+        /* компактный бренд и мини-кнопка языка */
+        .brand__name {
+          font-size: 12px !important;
+          line-height: 1.15 !important;
+        }
+        #langBtn {
+          justify-self: start !important;
+          margin: 0 !important;
+          font-size: 10px !important;
+          padding: 2px 5px !important;
+          line-height: 1 !important;
+          border-radius: 5px !important;
+          width: auto !important;
+          min-width: 24px !important;
+        }
+
+        /* Лента / admin — каждая на всю ширину */
+        .bar__inner .nav .btn,
+        .bar__inner .nav .btn--sm {
+          width: 100% !important;
+          text-align: center !important;
+          padding: 6px 10px !important;
+          font-size: 13px !important;
+          border-radius: 8px !important;
+        }
+      }
+      /* Шапка и кнопки влево */
+      .bar__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important; /* ← влево */
+        gap: 6px;
+        width: 100%;
+      }
+
+      #langBtn {
+        order: -1;
+        margin: 0; /* убираем auto */
+        align-self: flex-start; /* кнопка тоже влево */
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 5px;
+      }
+
+      /* Лента и admin в столбик, но тоже влево */
+      .bar__inner .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start !important; /* ← влево */
+        gap: 6px;
+        width: 100%;
+      }
+
+      .bar__inner .nav .btn {
+        width: auto !important; /* кнопки по содержимому */
+        text-align: left !important; /* текст тоже влево */
+        padding: 6px 12px;
+      }
+      /* Шапка: всё вправо */
+      .bar__inner {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end !important; /* прижимаем вправо */
+        gap: 6px;
+        width: 100%;
+      }
+
+      /* кнопка ru тоже вправо */
+      #langBtn {
+        order: -1;
+        margin: 0;
+        align-self: flex-end !important; /* вправо */
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+        border-radius: 5px;
+      }
+
+      /* Лента и admin в столбик справа */
+      .bar__inner .nav {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end !important; /* вправо */
+        gap: 6px;
+        width: 100%;
+      }
+
+      .bar__inner .nav .btn {
+        width: auto !important;
+        text-align: right !important; /* текст тоже вправо */
+        padding: 6px 12px;
+      }
+      /* Делаем кнопки длиннее */
+      .bar__inner .nav .btn,
+      .bar__inner .nav .btn-outline {
+        width: 80% !important; /* кнопки займут 80% ширины блока */
+        max-width: 260px !important; /* ограничение, чтобы не слишком большие */
+        text-align: center !important; /* текст по центру */
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+      }
+      /* Кнопки Лента / admin / ru одинаковой длины и по центру */
+      #langBtn,
+      .bar__inner .nav .btn,
+      .bar__inner .nav .btn-outline {
+        display: block !important;
+        width: 80% !important; /* длина кнопки (80% ширины блока) */
+        max-width: 260px !important; /* ограничение максимума */
+        margin: 0 auto !important; /* центрируем */
+        text-align: center !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+      }
+      /* Заглавный текст "Подать объявление" */
+      .panel h1 {
+        font-size: 20px !important; /* было меньше, сделаем крупнее */
+        font-weight: bold !important;
+        margin-bottom: 10px; /* немного отступа вниз */
+        text-align: center; /* можно центрировать */
+      }
+      /* === DESKTOP RESET (широкие экраны) === */
+      @media (min-width: 769px) {
+        /* шапка обратно в одну строку */
+        .bar__inner {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: space-between !important;
+          gap: 12px !important;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        /* кнопка языка снова справа/рядом, обычного размера */
+        #langBtn {
+          order: 0 !important;
+          align-self: auto !important;
+          margin: 0 0 0 12px !important; /* небольшой отступ слева */
+          width: auto !important;
+          min-width: 0 !important;
+          font-size: 14px !important;
+          padding: 6px 10px !important;
+        }
+
+        /* навигация в строку */
+        .bar__inner .nav {
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
+          gap: 8px !important;
+          width: auto !important;
+        }
+        /* 📱 Скролл для адаптива 280 px */
+        @media (max-width: 280px), (max-height: 480px) {
+          html,
+          body {
+            height: 100vh !important;
+            overflow-y: auto !important; /* включаем вертикальный скролл */
+            overflow-x: hidden !important; /* без горизонтальной прокрутки */
+            scrollbar-width: thin !important; /* Firefox */
+            scroll-behavior: smooth !important;
+          }
+
+          /* Для Chrome / Edge */
+          ::-webkit-scrollbar {
+            width: 8px;
+          }
+          ::-webkit-scrollbar-thumb {
+            background-color: #9c9c9c;
+            border-radius: 4px;
+          }
+        }
+        /* === Включаем прокрутку всей страницы === */
+        html,
+        body {
+          height: auto !important;
+          overflow-y: auto !important; /* вертикальный скролл */
+          overflow-x: hidden !important; /* без горизонтального */
+          scroll-behavior: smooth;
+        }
+
+        /* Контейнеры снова растягиваются по контенту */
+        .wrap,
+        .main {
+          height: auto !important;
+          overflow: visible !important;
+        }
+      }
+      /* === Скролл для всех адаптивов: 280–960 px === */
+      @media (max-width: 960px) {
+        html,
+        body {
+          height: 100vh !important;
+          overflow-y: auto !important; /* вертикальная прокрутка */
+          overflow-x: hidden !important; /* без горизонтальной */
+          scrollbar-width: thin !important; /* Firefox */
+          scroll-behavior: smooth !important;
+        }
+
+        /* Chrome / Edge */
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+          background-color: #9c9c9c;
+          border-radius: 4px;
+        }
+      }
+      /* === Сузить главный интерфейс до 80% === */
+      @media (min-width: 961px) {
+        .wrap {
+          width: 80% !important;
+          max-width: none !important;
+          margin: 16px auto !important; /* по центру */
+        }
+        /* шапку тоже сужаем до 80% */
+        body .bar {
+          width: 80% !important;
+          max-width: none !important;
+          margin: 16px auto !important;
+        }
+      }
+      /* === Жесткое переопределение ширины интерфейса только для create.html === */
+      @media (min-width: 961px) {
+        body > .wrap {
+          width: 70vw !important; /* именно 70% ширины окна */
+          max-width: 70vw !important; /* перекрывает max-width:1100px */
+          margin: 0 auto !important; /* центрирование */
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
+
+        body > .wrap > .bar {
+          width: 70vw !important;
+          max-width: 70vw !important; /* ломает 100% правило из index.css */
+          margin: 16px auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="bar">
+        <div class="bar__inner">
+          <div class="brand">
+            <span class="brand__logo">🏷️</span>
+            <span class="brand__name">Продай-ка!</span>
+          </div>
+
+          <nav class="nav">
+            <a href="index.html" class="btn btn--sm">Стрічка</a>
+            <a href="admin.html" class="btn btn--sm">admin</a>
+          </nav>
+        </div>
+      </header>
+      <main class="panel">
+        <h1>Подать объявление</h1>
+
+        <label for="deal">Тип сделки</label>
+        <select id="deal" required>
+          <option value="" disabled selected hidden>Например: Куплю</option>
+          <option value="Куплю">Куплю</option>
+          <option value="Продам">Продам</option>
+          <option value="Отдам">Отдам</option>
+          <option value="Возьму в дар">Возьму в дар</option>
+        </select>
+
+        <!-- Услуги -->
+        <label id="services-label" for="services">Услуги</label>
+        <input
+          id="services"
+          placeholder="Наприклад: Послуги масажиста"
+          maxlength="30"
+          autocomplete="off"
+          autocorrect="on"
+          autocapitalize="sentences"
+          spellcheck="true"
+        />
+
+        <!-- Категория -->
+        <label for="category">Категория</label>
+        <select id="category" required>
+          <option value="" disabled selected>Например: Жильё</option>
+          <option value="Авто-мото техника">Транспорт</option>
+          <option value="Квартиры">Жильё</option>
+          <option value="Бытовая техника">Техника</option>
+          <option value="Животные">Животные</option>
+          <option value="Продукты питания">Продукты</option>
+          <option value="Одежда">Одежда</option>
+          <option value="Электроника">Электроника</option>
+          <option value="Украшения">Украшения</option>
+          <option value="Товары для детей">Для детей</option>
+          <option value="Инструменты">Инструменты</option>
+          <option value="Прочее">Прочее</option>
+          <option value="Услуги">Услуги</option>
+        </select>
+
+        <label>Вид товара</label>
+        <input
+          id="title"
+          placeholder="Наприклад: Настільна лампа"
+          maxlength="30"
+        />
+
+        <div id="priceRow">
+          <label for="price">Цена (грн)</label>
+          <input
+            id="price"
+            type="number"
+            placeholder="1000"
+            autocomplete="off"
+          />
+        </div>
+
+        <label for="city">Город</label>
+        <select id="city" required>
+          <option value="" disabled selected hidden>Например: Никополь</option>
+          <option value="Никополь">Никополь</option>
+          <option value="Марганец">Марганец</option>
+          <option value="Покров">Покров</option>
+          <option value="Каменское">Каменское</option>
+          <option value="Капуловка">Капуловка</option>
+          <option value="Алексеевка">Алексеевка</option>
+          <option value="Красногригорьевка">Красногригорьевка</option>
+          <option value="Другой">Другой</option>
+        </select>
+
+        <!-- анти-автозаполнение: Chrome «сливает» подсказки сюда -->
+        <input
+          type="text"
+          name="fake-phone"
+          autocomplete="tel"
+          style="
+            position: absolute;
+            left: -9999px;
+            width: 0;
+            height: 0;
+            opacity: 0;
+            border: 0;
+            padding: 0;
+          "
+        />
+
+        <label>Телефон</label>
+        <input
+          id="phone"
+          type="tel"
+          name="phone_no_autofill"
+          placeholder="+380 000 000 000 "
+          maxlength="13"
+          autocomplete="off"
+          inputmode="tel"
+          aria-autocomplete="none"
+          autocapitalize="off"
+          spellcheck="false"
+        />
+
+        <label>Описание товара</label>
+        <textarea
+          id="desc"
+          rows="5"
+          maxlength="60"
+          placeholder="Не більше 60 символів"
+        ></textarea>
+
+        <div class="btn-row">
+          <div class="btn-left">
+            <button class="btn red" onclick="save()">Сохранить</button>
+            <button class="btn gray" id="reset-btn" type="button">
+              Сброс условий
+            </button>
+          </div>
+          <div class="btn-right">
+            <a class="btn gray" href="pay.html">Оплата</a>
+
+            <button class="btn green" type="button">Оплачено</button>
+          </div>
+        </div>
+
+        <script>
+          let SERVICE_MODE = false; // режим "Услуги"
+          const cleanPhone = (s) => s.replace(/[^\d+]/g, "");
+          const normDeal = (d) =>
+            d === "Продам" ? "Продажа" : d === "Куплю" ? "Купля" : d;
+          const val = (id) => (document.getElementById(id)?.value || "").trim();
+
+          function save() {
+            const deal = val("deal");
+            const category = val("category");
+            const service = val("services"); // текст из "Услуги"
+            const title = val("title"); // «Вид товара»
+            const price = val("price");
+            const city = val("city");
+            const phone = cleanPhone(val("phone"));
+            const desc = val("desc");
+
+            if (SERVICE_MODE) {
+              if (!service) return alert("Опиши услугу.");
+              if (!phone) return alert("Введи телефон.");
+              const ad = {
+                deal: "", // тип сделки не обязателен для услуг
+                category: "Услуги", // фиксируем категорию
+                title: service, // заголовок = текст услуги
+                price: "", // цена не нужна
+                city,
+                phone,
+                desc,
+                createdAt: Date.now(), // ← ДОБАВИЛА
+              };
+              const key = "ads";
+              const ads = JSON.parse(localStorage.getItem(key) || "[]");
+              ads.unshift(ad);
+              localStorage.setItem(key, JSON.stringify(ads));
+              tryPostAd(ad); // ← ДОБАВИЛА ЗДЕСЬ
+              location.href = "index.html";
+              return;
+            }
+
+            // Обычный режим (товар)
+            if (!title) return alert("Введи «Вид товара».");
+            if (!phone) return alert("Введи телефон.");
+            if (!category) return alert("Выбери категорию.");
+            if (deal === "Продам" && (!price || Number(price) <= 0))
+              return alert("Для «Продам» укажи цену больше 0.");
+
+            const ad = {
+              deal: normDeal(deal),
+              category,
+              title,
+              price,
+              city,
+              phone,
+              desc,
+              createdAt: Date.now(),
+            };
+            const key = "ads";
+            const ads = JSON.parse(localStorage.getItem(key) || "[]");
+            ads.unshift(ad);
+            localStorage.setItem(key, JSON.stringify(ads));
+            tryPostAd(ad);
+            location.href = "index.html";
+          }
+
+          // === ЯЗЫК ВВОДА / ОРФОГРАФИЯ (RU/UK) ===
+          const INPUT_LANG_KEY = "inputLang"; // 'ru' | 'uk'
+          const TEXT_FIELDS = ["services", "title", "desc"]; // текстовые поля с проверкой орфографии
+
+          // === Переключение текста интерфейса (RU/UA) ===
+          function setUIStrings(lang) {
+            const t = {
+              ru: {
+                h1: "Подати оголошення",
+                nav_feed: "Стрічка",
+                deal: "Тип угоди",
+                services: "Послуги",
+                category: "Категорія",
+                title: "Вид товару",
+                price: "Ціна (грн)",
+                city: "Місто",
+                phone: "Телефон",
+                desc: "Опис товару",
+                save: "Сохранить",
+                reset: "Сброс условий",
+                pay: "Оплата",
+                deal_ph: "Наприклад: Куплю",
+                city_ph: "Наприклад: Нікополь",
+                cat_ph: "Например: Квартири",
+                deal_opts: ["Куплю", "Продам", "Отдам", "Возьму в дар"],
+                news_title: "Новини сайту",
+                news_empty: "Поки новин немає. Адмін додасть пізніше.",
+              },
+              uk: {
+                h1: "Подати оголошення",
+                nav_feed: "Стрічка",
+                deal: "Тип угоди",
+                services: "Послуги",
+                category: "Категорія",
+                title: "Вид товару",
+                price: "Ціна (грн)",
+                city: "Місто",
+                phone: "Телефон",
+                desc: "Опис товару",
+                save: "Зберегти",
+                reset: "Скидання умов",
+                pay: "Оплата",
+                deal_ph: "Наприклад: Куплю",
+                city_ph: "Наприклад: Нікополь",
+                cat_ph: "Наприклад: Квартири",
+                deal_opts: ["Куплю", "Продам", "Віддам", "Візьму в дар"],
+                news_title: "Новини сайту",
+                news_empty: "Поки новин немає. Адмін додасть пізніше.",
+              },
+            }[lang === "uk" ? "uk" : "ru"];
+
+            // Заголовки
+            document.querySelector("main.panel h1")?.replaceChildren(t.h1);
+            document.querySelector(".nav .chip")?.replaceChildren(t.nav_feed);
+
+            // Метки
+            document
+              .querySelector('label[for="deal"]')
+              ?.replaceChildren(t.deal);
+            document
+              .getElementById("services-label")
+              ?.replaceChildren(t.services);
+            document
+              .querySelector('label[for="category"]')
+              ?.replaceChildren(t.category);
+            document
+              .getElementById("title")
+              ?.previousElementSibling?.replaceChildren(t.title);
+            document
+              .querySelector('label[for="price"]')
+              ?.replaceChildren(t.price);
+            document
+              .querySelector('label[for="city"]')
+              ?.replaceChildren(t.city);
+            document.getElementById("newsTitle")?.replaceChildren(t.news_title);
+
+            const phoneLbl =
+              document.getElementById("phone")?.previousElementSibling;
+            if (phoneLbl) phoneLbl.textContent = t.phone;
+            const descLbl =
+              document.getElementById("desc")?.previousElementSibling;
+            if (descLbl) descLbl.textContent = t.desc;
+
+            // Кнопки
+            document
+              .querySelector('button.btn.red[onclick="save()"]')
+              ?.replaceChildren(t.save);
+            document.getElementById("reset-btn")?.replaceChildren(t.reset);
+            document.querySelector(".btn-right .btn")?.replaceChildren(t.pay);
+
+            // Плейсхолдеры select
+            const dealSel = document.getElementById("deal");
+            const catSel = document.getElementById("category");
+            const citySel = document.getElementById("city");
+            if (dealSel?.options[0]) dealSel.options[0].textContent = t.deal_ph;
+            if (catSel?.options[0]) catSel.options[0].textContent = t.cat_ph;
+            if (citySel?.options[0]) citySel.options[0].textContent = t.city_ph;
+
+            // Опции "Тип сделки"
+            if (dealSel && dealSel.options.length >= 5) {
+              for (let i = 1; i <= 4; i++) {
+                if (dealSel.options[i])
+                  dealSel.options[i].textContent = t.deal_opts[i - 1];
+              }
+            }
+          }
+
+          function applyInputLanguage(lang) {
+            // Язык документа (влияет на встроенный словарь)
+            document.documentElement.lang = lang;
+
+            // Включаем проверку орфографии на всех текстовых полях
+            document
+              .querySelectorAll("input[type='text'], textarea")
+              .forEach((el) => {
+                el.spellcheck = true;
+                el.setAttribute("spellcheck", "true");
+                el.setAttribute("lang", lang); // ru ↔ uk
+                el.autocapitalize = "sentences";
+                el.autocorrect = "on";
+              });
+
+            // Телефон и цена — без орфографии
+            const tel = document.getElementById("phone");
+            if (tel) {
+              tel.spellcheck = false;
+              tel.setAttribute("lang", "");
+            }
+            const price = document.getElementById("price");
+            if (price) {
+              price.spellcheck = false;
+              price.setAttribute("lang", "");
+            }
+
+            setUIStrings(lang);
+            renderNews(); // ← добавить: перерисовать низ под новый язык
+
+            // Индикатор на кнопке (текст 'ua' при коде 'uk')
+            const flag = document.querySelector("#langBtn .lang-flag");
+            if (flag) flag.textContent = lang === "uk" ? "ua" : "ru";
+
+            // Сохраняем выбор
+            localStorage.setItem("inputLang", lang);
+          }
+
+          function toggleInputLanguage() {
+            const current = localStorage.getItem(INPUT_LANG_KEY) || "ru";
+            const next = current === "ru" ? "uk" : "ru";
+            applyInputLanguage(next);
+          }
+
+          // Инициализация и переключение режимов
+          document.addEventListener("DOMContentLoaded", () => {
+            // Инициализация языка ввода
+            const savedLang = localStorage.getItem(INPUT_LANG_KEY) || "ru";
+            applyInputLanguage(savedLang);
+
+            // Клик по кнопке RU ⇄ UA
+            document
+              .getElementById("langBtn")
+              ?.addEventListener("click", toggleInputLanguage);
+
+            const dealSel = document.getElementById("deal");
+            const priceRow = document.getElementById("priceRow");
+            const priceInp = document.getElementById("price");
+            const catSel = document.getElementById("category");
+
+            const servicesInp = document.getElementById("services");
+            const servicesLabel = document.getElementById("services-label");
+
+            const lblDeal = document.querySelector('label[for="deal"]');
+            const lblCat = document.querySelector('label[for="category"]');
+            const titleInp = document.getElementById("title");
+            const lblTitle = titleInp ? titleInp.previousElementSibling : null; // «Вид товара»
+
+            const hide = (el, on) => {
+              if (el) el.hidden = !!on;
+            };
+
+            // Кнопка "Сброс условий"
+            const resetBtn = document.getElementById("reset-btn");
+            resetBtn?.addEventListener("click", () => {
+              const show = (el) => {
+                if (el) el.hidden = false;
+              };
+
+              // Показать блок "Услуги" и выйти из сервис-режима
+              show(servicesLabel);
+              show(servicesInp);
+              setServiceMode(false); // тут вернутся: Тип сделки, Категория, Вид товара
+
+              // Очистить поля
+              if (servicesInp) servicesInp.value = "";
+              if (titleInp) titleInp.value = "";
+              if (priceInp) priceInp.value = "";
+              const phoneInp = document.getElementById("phone");
+              if (phoneInp) phoneInp.value = "";
+              const descInp = document.getElementById("desc");
+              if (descInp) descInp.value = "";
+
+              // Сбросить select'ы к плейсхолдерам
+              if (dealSel) dealSel.selectedIndex = 0;
+              if (catSel) catSel.selectedIndex = 0;
+              const citySel = document.getElementById("city");
+              if (citySel) citySel.selectedIndex = 0;
+
+              // Обновить визуальные зависимости
+              setCatColor();
+              syncPriceRow();
+
+              // ВАЖНО: не ставим .focus() ни на одно поле — иначе снова включится режим "Услуги" (у тебя на services стоит слушатель focus → setServiceMode(true)):contentReference[oaicite:1]{index=1}.
+            });
+
+            // Цвет placeholder у select (как было)
+            const setCatColor = () => {
+              catSel.style.color = catSel.value ? "#111827" : "#6b7280";
+            };
+            catSel.addEventListener("change", setCatColor);
+            setCatColor();
+
+            // Показ цены только для «Продам» (как было)
+            const syncPriceRow = () => {
+              const show = dealSel.value === "Продам" && !SERVICE_MODE;
+              priceRow.hidden = !show;
+              if (!show) priceInp.value = "";
+            };
+            dealSel.addEventListener("change", syncPriceRow);
+
+            // Включить режим «Услуги»
+            const setServiceMode = (on) => {
+              SERVICE_MODE = !!on;
+              hide(lblDeal, SERVICE_MODE);
+              hide(dealSel, SERVICE_MODE);
+              hide(lblCat, SERVICE_MODE);
+              hide(catSel, SERVICE_MODE);
+              hide(lblTitle, SERVICE_MODE);
+              hide(titleInp, SERVICE_MODE);
+              // Цена всегда скрыта в режиме услуг
+              priceRow.hidden = true;
+              syncPriceRow();
+            };
+
+            // Вход в «Услуги»: кликом по метке, фокусом или вводом
+            servicesLabel?.addEventListener("click", () => {
+              servicesInp?.focus();
+              setServiceMode(true);
+            });
+            servicesInp?.addEventListener("focus", () => setServiceMode(true));
+            servicesInp?.addEventListener("input", () => setServiceMode(true));
+
+            // Вход в «Тип сделки»: «Услуги» скрываем с интерфейса
+            const hideServicesBlock = () => {
+              setServiceMode(false);
+              hide(servicesLabel, true);
+              hide(servicesInp, true);
+              syncPriceRow();
+            };
+            dealSel?.addEventListener("focus", hideServicesBlock);
+            dealSel?.addEventListener("click", hideServicesBlock);
+
+            // Стартовое состояние
+            syncPriceRow();
+          });
+
+          function enforceLanguage(lang) {
+            const inputs = document.querySelectorAll(
+              "input[type='text'], textarea"
+            );
+
+            inputs.forEach((el) => {
+              el.addEventListener("input", () => {
+                const value = el.value;
+
+                if (lang === "ru") {
+                  // запрещаем украинские буквы
+                  if (/[іїєґІЇЄҐ]/.test(value)) {
+                    el.setCustomValidity(
+                      "Текст должен быть только на русском языке"
+                    );
+                    el.reportValidity();
+                  } else {
+                    el.setCustomValidity("");
+                  }
+                }
+
+                if (lang === "uk") {
+                  // запрещаем русские буквы
+                  if (/[ёъыэЁЪЫЭ]/.test(value)) {
+                    el.setCustomValidity(
+                      "Текст повинен бути тільки українською мовою"
+                    );
+                    el.reportValidity();
+                  } else {
+                    el.setCustomValidity("");
+                  }
+                }
+              });
+            });
+          }
+
+          // === Новости сайта (read-only для create.html) ===
+          const NEWS_KEY = "site_news";
+
+          // безопасный вывод текста
+          function escapeHtml(s) {
+            return String(s)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#39;");
+          }
+
+          function renderNews() {
+            const box = document.getElementById("newsBody");
+            if (!box) return;
+
+            let items = [];
+            try {
+              items = JSON.parse(localStorage.getItem(NEWS_KEY) || "[]");
+            } catch (e) {
+              items = [];
+            }
+
+            if (!Array.isArray(items) || items.length === 0) {
+              const lang = document.documentElement.lang === "uk" ? "uk" : "ru";
+              const emptyText =
+                lang === "uk"
+                  ? "Поки новин немає. Адмін додасть пізніше."
+                  : "Поки новин немає. Адмін додасть пізніше.";
+              box.innerHTML = `<p style="opacity:.7">${emptyText}</p>`;
+              return;
+            }
+
+            box.innerHTML = items
+              .map((n) => {
+                const dt = n?.date
+                  ? `<div class="news__date">${escapeHtml(n.date)}</div>`
+                  : "";
+                const txt = escapeHtml(n?.text || "");
+                return `<article class="news__item">${dt}<div class="news__text">${txt}</div></article>`;
+              })
+              .join("");
+          }
+
+          // в конце DOMContentLoaded:
+          document.addEventListener("DOMContentLoaded", () => {
+            renderNews();
+          });
+        </script>
+      </main>
+      <section class="news" aria-labelledby="newsTitle">
+        <h2 id="newsTitle" class="news__title">Новости сайта</h2>
+        <div
+          id="newsBody"
+          class="news__body"
+          title="Здесь админ публикует изменения и дополнения"
+        ></div>
+      </section>
+    </div>
+
+    <script>
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
+
+      function tryPostAd(ad) {
+        fetch(API + "/ads", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(ad),
+        }).catch(() => {}); // не ломает UX, если API OFFLINE
+      }
+
+      // Индикатор статуса API (по желанию)
+      async function apiStatus() {
+        try {
+          const r = await fetch(API + "/ads", { cache: "no-store" });
+          return r.ok;
+        } catch {
+          return false;
+        }
+      }
+      document.addEventListener("DOMContentLoaded", () =>
+        apiStatus().then((ok) => {
+          const el = document.getElementById("apiStatus");
+          if (!el) return;
+          el.textContent = ok ? "API: OK" : "API: OFFLINE";
+          el.style.color = ok ? "#16a34a" : "#ef4444";
+        })
+      );
+    </script>
+    <script src="js/ads-api.js"></script>
+  </body>
+</html>
