@@ -1153,34 +1153,33 @@
       </div>
 
       <!-- Боковая панель -->
-
-      id="apiStatus" style="text-align: right; font-size: 12px; opacity: 0.85" >
     </div>
-    <!-- Статус API (без конфликта имён) -->
+    <script src="./script.js?v=1" defer></script>
+    <div
+      id="apiStatus"
+      style="text-align: right; font-size: 12px; opacity: 0.85"
+    ></div>
     <script>
-      const API_STATUS = "https://68e3a1098e14f4523dae1d54.mockapi.io/";
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io/"; // если у тебя другой порт — подправь
+
       async function apiStatus() {
         try {
-          const r = await fetch(API_STATUS + "/ads", { cache: "no-store" });
+          const r = await fetch(API + "/ads", { cache: "no-store" });
           return r.ok;
-        } catch (e) {
+        } catch {
           return false;
         }
       }
-      function showApiStatus(id = "apiStatus") {
-        const el = document.getElementById(id);
+      function showApiStatus(elId = "apiStatus") {
+        const el = document.getElementById(elId);
         if (!el) return;
         apiStatus().then((ok) => {
           el.textContent = ok ? "API: OK" : "API: OFFLINE";
           el.style.color = ok ? "#16a34a" : "#ef4444";
         });
       }
-      document.addEventListener("DOMContentLoaded", showApiStatus);
+      document.addEventListener("DOMContentLoaded", () => showApiStatus());
     </script>
-
-    <script src="js/ads-api.js" defer></script>
-     <script src="script.js?v=2" defer></script> 
+    <script src="js/ads-api.js"></script>
   </body>
 </html>
-
-

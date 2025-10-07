@@ -63,77 +63,106 @@ function ensureEmptyStub() {
   return el;
 }
 
-// === РЕНДЕР ЛЕНТЫ С MockAPI ===
-async function renderAds() {
+// === РЕНДЕР ЛЕНТЫ С data-* ДЛЯ ТОЧНОГО ФИЛЬТРА ===
+(function renderAds() {
   const box = document.getElementById("list");
   if (!box) return;
 
-  box.innerHTML = "<div class='empty'>Завантаження...</div>";
+  const now = Date.now();
+  const key = "ads";
+  const raw = JSON.parse(localStorage.getItem(key) || "[]");
 
-  try {
-    const ads = await ADS_API.loadAds(); // ← теперь из MockAPI
-    if (!ads || ads.length === 0) {
-      box.innerHTML =
-        '<div class="empty">Объявлений пока нет. Нажми «Подати оголошення».</div>';
-      return;
+  const valid = [];
+  let dirty = false; // ← будем знать, что нужно перезаписать localStorage
+
+  for (const ad of raw) {
+    if (!ad) continue;
+    const okTitle = ad.title && ad.title.trim() !== "";
+    const okPhone = ad.phone && String(ad.phone).trim() !== "";
+    if (!okTitle || !okPhone) continue;
+
+    // ← если createdAt отсутствует — выставляем ОДИН РАЗ и помечаем dirty
+    let createdAt = Number(ad.createdAt);
+    if (!createdAt) {
+      createdAt = now;
+      ad.createdAt = createdAt;
+      dirty = true;
     }
 
-    const now = Date.now();
-    const TTL_DAYS = 6;
-    const MS_DAY = 24 * 60 * 60 * 1000;
-
-    box.innerHTML = ads
-      .map((ad) => {
-        const dealText = ad.deal || "";
-        const dealNorm = dealText.toLowerCase();
-        const showPrice =
-          (dealNorm === "продам" || dealNorm === "продажа") &&
-          ad.price &&
-          String(ad.price).trim() !== "";
-        const createdAt = new Date(ad.createdAt).getTime() || now;
-
-        const createdDayStart = new Date(createdAt);
-        createdDayStart.setHours(0, 0, 0, 0);
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
-        let daysPassed = Math.floor((todayStart - createdDayStart) / MS_DAY);
-        if (daysPassed < 0) daysPassed = 0;
-        const daysLeft = Math.max(1, TTL_DAYS - daysPassed);
-
-        return `
-        <article class="card"
-          data-city="${(ad.city || "").toLowerCase()}"
-          data-category="${(ad.category || "").toLowerCase()}"
-          data-deal="${dealNorm}"
-          data-phone="${(ad.phone || "").replace(/\D+/g, "")}">
-          <header class="card__head">
-            <h3 class="card__title">${ad.title || ""}</h3>
-            <div class="card__price">${
-              showPrice ? ad.price + " грн." : ""
-            }</div>
-          </header>
-          <div class="card__meta">
-            <span>${ad.city || ""}</span> ·
-            <span>${dealText || ""}</span> ·
-            <span>${ad.category || ""}</span> ·
-            <span>${ad.phone || ""}</span>
-          </div>
-          <p class="card__desc">${ad.desc || ""}</p>
-          <div class="card__badge">Осталось ${daysLeft} дн.</div>
-        </article>`;
-      })
-      .join("");
-
-    applyFilters();
-  } catch (err) {
-    box.innerHTML =
-      '<div class="empty">Ошибка загрузки данных. Попробуй обновить страницу.</div>';
-    console.error(err);
+    const age = now - createdAt;
+    if (age < TTL_DAYS * MS_DAY) {
+      valid.push(ad); // сохраняем уже с корректным createdAt
+    } else {
+      dirty = true; // просроченное — тоже повод переписать
+    }
   }
-}
 
-// автозагрузка после загрузки страницы
-document.addEventListener("DOMContentLoaded", renderAds);
+  if (dirty) {
+    localStorage.setItem(key, JSON.stringify(valid));
+  }
+
+  if (valid.length === 0) {
+    box.innerHTML =
+      '<div class="empty">Объявлений пока нет. Нажми «Подать объявление».</div>';
+    return;
+  }
+
+  // 2) Рендер карточек с бейджем оставшихся дней
+  box.innerHTML = valid
+    .map((ad) => {
+      const dealText =
+        typeof ad.deal === "string"
+          ? ad.deal
+          : ad.deal?.label || ad.deal?.value || "";
+      const dealNorm = norm(dealText);
+      const showPrice =
+        (dealNorm === "продам" || dealNorm === "продажа") &&
+        ad.price &&
+        String(ad.price).trim() !== "";
+      const createdAt = Number(ad.createdAt) || now;
+
+      // начало суток ДНЯ СОЗДАНИЯ
+      const createdDayStart = new Date(createdAt);
+      createdDayStart.setHours(0, 0, 0, 0);
+
+      // начало сегодняшних суток
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      // прошедшие календарные дни (не меньше 0)
+      let daysPassed = Math.floor((todayStart - createdDayStart) / MS_DAY);
+      if (daysPassed < 0) daysPassed = 0;
+
+      // осталось дней
+      const daysLeft = Math.max(1, TTL_DAYS - daysPassed); // TTL_DAYS = 6
+
+      return `
+      <article class="card"
+        data-city="${norm(ad.city)}"
+        data-category="${norm(ad.category)}"
+        data-deal="${dealNorm}"
+        data-phone="${digits(ad.phone)}"
+      >
+        <header class="card__head">
+          <h3 class="card__title">${ad.title}</h3>
+          <div class="card__price">${showPrice ? ad.price + " грн." : ""}</div>
+        </header>
+        <div class="card__meta">
+          <span>${ad.city || ""}</span> ·
+          <span>${dealText || ""}</span> ·
+          <span>${ad.category || ""}</span> ·
+          <span>${ad.phone || ""}</span>
+        </div>
+        <p class="card__desc">${ad.desc || ""}</p>
+
+        <div class="card__badge" aria-label="Срок публикации">Осталось ${daysLeft} дн.</div>
+      </article>`;
+    })
+    .join("");
+
+  ensureEmptyStub();
+  applyFilters();
+})();
 
 // === ЕДИНАЯ ФУНКЦИЯ ФИЛЬТРА ===
 function applyFilters() {
