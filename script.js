@@ -123,6 +123,12 @@ function renderAds(data) {
       if (daysPassed < 0) daysPassed = 0;
 
       const daysLeft = Math.max(1, TTL_DAYS - daysPassed);
+      // ⬇️ вставить здесь
+      const rawDesc = (ad.description || ad.desc || "").trim();
+      const isSeed = /^description\s+\d+$/i.test(rawDesc); // "description 1/2/3..."
+      const descText = isSeed ? "" : rawDesc;
+      const lang = localStorage.inputLang === "uk" ? "uk" : "ru";
+      const labelDesc = lang === "uk" ? "Опис:" : "Описание:";
 
       return `
       <article class="card"
@@ -141,7 +147,10 @@ function renderAds(data) {
           <span>${ad.category || ""}</span> ·
           <span>${ad.phone || ""}</span>
         </div>
-        <p class="card__desc">${ad.description || ad.desc || ""}</p>
+       
+
+        <p class="card__desc">${descText ? `${labelDesc} ${descText}` : ""}</p>
+
         <div class="card__badge" aria-label="Срок публикации">Осталось ${daysLeft} дн.</div>
       </article>`;
     })
