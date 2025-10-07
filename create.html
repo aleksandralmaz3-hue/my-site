@@ -728,22 +728,20 @@
             const price = val("price");
             const city = val("city");
             const phone = cleanPhone(val("phone"));
-            const desc = (val("description") || val("desc")).trim();
-            const description = desc; // дублируем для совместимости
+            const desc = val("desc");
 
             if (SERVICE_MODE) {
               if (!service) return alert("Опиши услугу.");
               if (!phone) return alert("Введи телефон.");
               const ad = {
-                deal: normDeal(deal),
+                deal: "", // тип сделки не обязателен для услуг
                 category: "Услуги", // фиксируем категорию
                 title: service, // заголовок = текст услуги
                 price: "", // цена не нужна
                 city,
                 phone,
-                description: desc,
-                desc: desc,
-                createdAt: Date.now(),
+                desc,
+                createdAt: Date.now(), // ← ДОБАВИЛА
               };
               const key = "ads";
               const ads = JSON.parse(localStorage.getItem(key) || "[]");
@@ -1141,39 +1139,14 @@
     </div>
 
     <script>
-      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
+      const API = "http://localhost:3000"; // если json-server на другом порту — подправь
 
-      function tryPostAd() {
-        const desc = (document.getElementById("desc")?.value || "").trim();
-        const description = desc;
-
-        const ad = {
-          title: val("title"),
-          price: Number(val("price")) || 0,
-          city: val("city"),
-          phone: val("phone"),
-          category: val("category"),
-          deal: val("deal"),
-          expiresAt: "expiresAt",
-          createdAt: Date.now(),
-          description: desc, // сохраняем текст описания
-          desc: desc, // дублируем для совместимости
-        };
-
+      function tryPostAd(ad) {
         fetch(API + "/ads", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(ad),
-        })
-          .then((res) => {
-            if (!res.ok) throw new Error("Ошибка при сохранении объявления");
-            return res.json();
-          })
-          .then(() => {
-            alert("Объявление успешно добавлено!");
-            form.reset();
-          })
-          .catch((err) => alert("Ошибка: " + err.message));
+        }).catch(() => {}); // не ломает UX, если API OFFLINE
       }
 
       // Индикатор статуса API (по желанию)
@@ -1194,5 +1167,6 @@
         })
       );
     </script>
+    <script src="js/ads-api.js"></script>
   </body>
 </html>

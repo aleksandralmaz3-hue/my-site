@@ -1154,13 +1154,13 @@
 
       <!-- Боковая панель -->
     </div>
-
+    <script src="./script.js?v=1" defer></script>
     <div
       id="apiStatus"
       style="text-align: right; font-size: 12px; opacity: 0.85"
     ></div>
     <script>
-      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io";
+      const API = "http://localhost:3000"; // если у тебя другой порт — подправь
 
       async function apiStatus() {
         try {
@@ -1180,8 +1180,6 @@
       }
       document.addEventListener("DOMContentLoaded", () => showApiStatus());
     </script>
-    <!-- файл в КОРНЕ, без /js/ -->
-    <script src="ads-api.js?v=9" defer></script>
-    <script src="script.js?v=9" defer></script>
+    <script src="js/ads-api.js"></script>
   </body>
 </html>
