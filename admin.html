@@ -109,12 +109,12 @@
         <a class="badge" href="index.html">Лента</a>
       </div>
 
-      <h1>Администратор</h1>
+      <h1>Адміністратор</h1>
 
       <form id="feedbackForm" class="form" autocomplete="off">
         <textarea
           id="feedbackText"
-          placeholder="Напишите сообщение админу..."
+          placeholder="Напишіть повідомлення..."
         ></textarea>
         <div class="form-buttons">
           <button type="submit">Отправить</button>
@@ -126,7 +126,8 @@
     </div>
     <script>
       // ===== Настройки API (тестовый json-server) =====
-      const API = "http://localhost:3000";
+      const API = "https://68e3a1098e14f4523dae1d54.mockapi.io"; // твой BASE
+      const FEED_URL = API + "/feedback"; // ресурс feedback
 
       // ===== DOM =====
       const form = document.getElementById("feedbackForm");
@@ -165,13 +166,28 @@
       const writeLocal = (arr) =>
         localStorage.setItem("feedback", JSON.stringify(arr));
 
+      async function loadFeedbackFromAPI() {
+        try {
+          const u = new URL(FEED_URL);
+          u.searchParams.set("sortBy", "createdAt");
+          u.searchParams.set("order", "desc");
+          const r = await fetch(u, { cache: "no-store" });
+          if (!r.ok) throw new Error();
+          const data = await r.json();
+          writeLocal(data); // кэш для офлайна
+          return data;
+        } catch {
+          return readLocal(); // офлайн
+        }
+      }
+
       // ===== API (мягко, офлайн-устойчиво) =====
       async function postFeedbackToAPI(msg) {
         try {
-          const r = await fetch(API + "/feedback", {
+          const r = await fetch(FEED_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: msg.text }),
+            body: JSON.stringify({ text: msg.text, createdAt: Date.now() }),
           });
           if (!r.ok) return null;
           const data = await r.json();
@@ -180,25 +196,27 @@
           return null;
         }
       }
+
       async function deleteFeedbackFromAPI(apiId) {
         try {
-          await fetch(API + "/feedback/" + apiId, { method: "DELETE" });
+          await fetch(FEED_URL + "/" + apiId, { method: "DELETE" });
         } catch {}
       }
 
       // ===== Рендер =====
-      function render() {
-        const items = readLocal();
+      // ===== Рендер от данных =====
+      function render(items = readLocal()) {
         list.innerHTML = items
           .map(
             (m) => `
       <div class="item" data-id="${m.id}">
         <div class="item__text">${esc(m.text)}</div>
-        <button class="item__btn" type="button" onclick="deleteForever(${
+        <button class="item__btn" type="button" onclick="deleteForever('${
           m.id
-        })">Удалить навсегда</button>
-      </div>
-    `
+        }')">
+          Удалить навсегда
+        </button>
+      </div>`
           )
           .join("");
       }
@@ -237,8 +255,11 @@
       }
       window.deleteForever = deleteForever;
 
-      // стартовый рендер
-      render();
+      // ===== Стартовая загрузка данных с MockAPI =====
+      document.addEventListener("DOMContentLoaded", async () => {
+        const items = await loadFeedbackFromAPI();
+        render(items);
+      });
     </script>
 
     <script>
@@ -261,10 +282,10 @@
             body: JSON.stringify(newMessage),
           });
 
-          alert("Сообщение отправлено администратору.");
+          alert("Повідомлення надіслано адміністратору.");
           document.getElementById("adminMessage").value = "";
         } else {
-          alert("Введите текст сообщения!");
+          alert("Введіть текст повідомлення!");
         }
       });
 
