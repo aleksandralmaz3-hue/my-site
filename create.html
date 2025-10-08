@@ -745,15 +745,16 @@
                 createdAt: Date.now(),
               };
 
+              // локально — чтобы сразу увидеть в ленте
               const key = "ads";
               const ads = JSON.parse(localStorage.getItem(key) || "[]");
               ads.unshift(ad);
               localStorage.setItem(key, JSON.stringify(ads));
-              localStorage.setItem("ads_sync", String(Date.now())); // сигнал ленте
+              localStorage.setItem("ads_sync", String(Date.now()));
 
-              await ADS_API.createAd(ad); // публикация в MockAPI + дублирование в LS
-
-              location.href = "index.html"; // переход только после записи
+              // сеть — дождаться записи и только потом уходить
+              await ADS_API.createAd(ad);
+              location.href = "index.html";
               return;
             }
 
@@ -1182,5 +1183,6 @@
         })
       );
     </script>
+    <script src="ads-api.js?v=9" defer></script>
   </body>
 </html>
