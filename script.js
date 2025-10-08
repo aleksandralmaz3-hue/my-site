@@ -134,7 +134,7 @@ function renderAds(data) {
 
       const daysLeft = Math.max(1, TTL_DAYS - daysPassed);
       const descText = String(
-        ad.description || ad.desc || ad.descriptions || ""
+        ad.desc || ad.description || ad.descriptions || ""
       ).trim();
 
       const lang = localStorage.inputLang === "uk" ? "uk" : "ru";
