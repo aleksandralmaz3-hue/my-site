@@ -751,7 +751,8 @@
               location.href = "index.html"; // переход на главную (по желанию)
 
               localStorage.setItem(key, JSON.stringify(ads));
-              tryPostAd(ad); // ← ДОБАВИЛА ЗДЕСЬ
+              ADS_API.createAd(ad);
+
               location.href = "index.html";
               return;
             }
