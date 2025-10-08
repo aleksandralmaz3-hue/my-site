@@ -719,7 +719,7 @@
             d === "Продам" ? "Продам" : d === "Куплю" ? "Куплю" : d;
           const val = (id) => (document.getElementById(id)?.value || "").trim();
 
-          function save() {
+          async function save() {
             const deal = val("deal");
             const category = val("category");
             const service = val("services"); // текст из "Услуги"
@@ -733,27 +733,27 @@
             if (SERVICE_MODE) {
               if (!service) return alert("Опиши услугу.");
               if (!phone) return alert("Введи телефон.");
+
               const ad = {
                 deal: normDeal(deal),
-                category: "Услуги", // фиксируем категорию
-                title: service, // заголовок = текст услуги
-                price: "", // цена не нужна
+                category: "Услуги",
+                title: service,
+                price: "",
                 city,
                 phone,
                 desc: description,
-                desc,
                 createdAt: Date.now(),
               };
+
               const key = "ads";
               const ads = JSON.parse(localStorage.getItem(key) || "[]");
               ads.unshift(ad);
-              localStorage.setItem("ads_sync", String(Date.now())); // сигнал ленте
-              location.href = "index.html"; // переход на главную (по желанию)
-
               localStorage.setItem(key, JSON.stringify(ads));
-              ADS_API.createAd(ad);
+              localStorage.setItem("ads_sync", String(Date.now())); // сигнал ленте
 
-              location.href = "index.html";
+              await ADS_API.createAd(ad); // публикация в MockAPI + дублирование в LS
+
+              location.href = "index.html"; // переход только после записи
               return;
             }
 
